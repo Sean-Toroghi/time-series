@@ -34,7 +34,18 @@ __Methods__
 - Informer model with NeuralForecast
   
 ### N-Beats model
+
+References
+- [pytorch forecasting library](https://pytorch-forecasting.readthedocs.io/en/stable/api/pytorch_forecasting.models.nbeats.NBeats.html)
+- [NHiTS mehthods](https://pytorch-forecasting.readthedocs.io/en/stable/api/pytorch_forecasting.models.nhits.NHiTS.html#pytorch_forecasting.models.nhits.NHiTS)
+- [N-BEATSx: a varient of N-BEATS that handles exogenous variables](https://nixtla.github.io/neuralforecast/models.nbeatsx.html)
+- 
 N-BEATS originally designed to handle problems that have several univariate time series. It is available as off-the-shelf model in `pytorch_forecasting`. 
+
+It is based on two main components:
+1. a double stack of residual connections (forecasting and backcasting).
+2. a deep stack of densely connected layers.
+
 
 __Steps__
 
@@ -58,7 +69,92 @@ __Steps__
   widths: The width of the fully connected layers in each block.
   - sharing: A Boolean parameter that denotes whether the weights are shared blocks per stack. In the interpretable mode, this parameter should be set to True.
   - backcast_loss_ratio: The relevance of the backcast loss in the model. Backcasting (predicting the input sample) is an important mechanism in the training of N-BEATS. This parameter balances the loss of the backcast with the loss of the forecast.
+2. Define call back and pass the model to the pytorch-lightning trainer
+  ```python
+  import lightning.pytorch as pl
+  from lightning.pytorch.callbacks import EarlyStopping
+  early_stop_callback = EarlyStopping(monitor="val_loss",
+      min_delta=1e-4,
+      patience=10,
+      verbose=False,
+      mode="min")
+  trainer = pl.Trainer(
+      max_epochs=30,
+      accelerator="auto",
+      enable_model_summary=True,
+      gradient_clip_val=0.01,
+      callbacks=[early_stop_callback],
+      )
+  # train the model
+  trainer.fit(
+      model,
+      train_dataloaders=datamodule.train_dataloader(),
+      val_dataloaders=datamodule.val_dataloader(),
+      )
+  # save model
+  best_model_path = trainer.checkpoint_callback.best_model_path
+  best_model = NBeats.load_from_checkpoint(best_model_path)
+  # evaluate model
+  predictions = best_model.predict(datamodule.test.to_dataloader(batch_size=1, shuffle=False))
+  actuals = torch.cat(
+      [y[0] for x, y in iter(
+          datamodule.test.to_dataloader(batch_size=1, 
+              shuffle=False))])
+  print((actuals - predictions.cpu()).abs().mean())
+  # visualize the prediction
+  raw_predictions = best_model.predict
+    (datamodule.val_dataloader(),
+    mode="raw",
+    return_x=True)
+  best_model.plot_interpretation(x=raw_predictions[1],
+      output=raw_predictions[0],
+      idx=0)
+  ```
+
+### Optimizing the learning rate
+`lightning.pytorch` libarary has a moddule to optimize the model, which can be used to optimize learning rate: `from lightning.pytorch.tuner import Tuner`.
+
+Turner acts as a wrapper of the trainer object, and then use `lr_optim()` method to optimize learning rate. 
+
+Example:
+```ptyhon
+from lightning.pytorch.tuner import Tuner
+import lightning.pytorch as pl
+from pytorch_forecasting import NBeats
+trainer = pl.Trainer(accelerator="auto", gradient_clip_val=0.01)
+tuner = Tuner(trainer)
+model = NBeats.from_dataset(
+    dataset=datamodule.training,
+    stack_types=['trend', 'seasonality'],
+    num_blocks=[3, 3],
+    num_block_layers=[4, 4],
+    widths=[256, 2048],
+    sharing=[True],
+    backcast_loss_ratio=1.0,
+)
+
+lr_optim = tuner.lr_find(model,
+    train_dataloaders=datamodule.train_dataloader(),
+    val_dataloaders=datamodule.val_dataloader(),
+    min_lr=1e-5)
+
+lr_optim.suggestion()
+fig = lr_optim.plot(show=True, suggest=True)
+fig.show()
+```
 
 
 
+---
+
+## Other refrences
+
+- [TimeShap](https://github.com/feedzai/timeshap)
+- [Temporal fusion transformer (TFT)](https://pytorch-forecasting.readthedocs.io/en/stable/tutorials/stallion.html#Interpret-model)
+- []()
+- []()
+- []()
+- []()
+- []()
+- []()
 # Time-series classification
