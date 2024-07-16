@@ -118,7 +118,7 @@ Turner acts as a wrapper of the trainer object, and then use `lr_optim()` method
 
 Example:
 
-```ptyhon
+```python
 from lightning.pytorch.tuner import Tuner
 import lightning.pytorch as pl
 from pytorch_forecasting import NBeats
@@ -144,6 +144,239 @@ fig = lr_optim.plot(show=True, suggest=True)
 fig.show()
 ```
 
+### GluonTS: probabisting time series modeling with PyTorch
+`glounts` is library with array of utilities for tiume series data processing and model evaluation.
+
+
+
+### DeepAR model
+DeepAR is a SOTA forecasting method by Amazon, that is very powerful when there’s a need to generate forecasts for multiple related time series.. It utilizes autoregressive recurent networks and suitable for tasks that benefits from longer horizons, such as demand forecasting. 
+
+With RNN architecture, DeepAR leverage LSTM orGRU to model a time series data. DeepAR, in addition to forecasting, can generates probabilistic forecasts, which mean it can provide a distribution over possible future values. This feature allows for further investigate the uncertaintity associated with the predictions. Furthermore, it considers commonalities between series, when working with multiple related time series. DeepAR can be trained to generate forecast for all series on global dataset, or trained on each time series separatetly (less efficient).
+
+DeepAR is sprecifically designed to make forecast in the following scenarios:
+- we have multiple related time series
+- dataset with seasonality or recurring patterns
+- it is important to generate probabilitic forecast (predict point estimate and also uncertatinty intervals).
+- perform very good for tasks similar to demand forecasting, stock price prediction, and web traffic prediction.
+
+```python
+model = [
+    VanillaTransformer(
+        h=HORIZON,
+        input_size=N_LAGS,
+        max_steps=100,
+        val_check_steps=5,
+        early_stop_patience_steps=3,
+    ),
+]
+nf = NeuralForecast(models=model, freq="D")
+Y_df = df[df["unique_id"] == 0]
+Y_train_df = Y_df.iloc[:-2*HORIZON]
+Y_val_df = Y_df.iloc[-2*HORIZON:-HORIZON]
+training_df = pd.concat([Y_train_df, Y_val_df])
+nf.fit(df=training_df, val_size=HORIZON)
+
+# visualize the forecast
+forecasts = nf.predict()
+Y_df = df[df["unique_id"] == 0]
+Y_hat_df = forecasts[forecasts.index == 0].reset_index()
+Y_hat_df = Y_test_df.merge(Y_hat_df, how="outer", 
+    on=["unique_id", "ds"])
+plot_df = pd.
+    concat([Y_train_df, Y_val_df, Y_hat_df]).set_index("ds")
+plot_df = plot_df.iloc[-150:]
+fig, ax = plt.subplots(1, 1, figsize=(20, 7))
+plot_df[["y", "VanillaTransformer"]].plot(ax=ax, linewidth=2)
+ax.set_title("First Time Series Forecast with Transformer", fontsize=22)
+ax.set_ylabel("Value", fontsize=20)
+ax.set_xlabel("Timestamp [t]", fontsize=20)
+ax.legend(prop={"size": 15})
+ax.grid()
+plt.show()
+```
+
+__Steps__
+1. preprocess data
+   ```python
+   from gluonts.dataset.common import ListDataset
+   from gluonts.dataset.common import FieldName
+   train_ds = ListDataset(
+       [
+           {FieldName.TARGET: entry["target"], 
+               FieldName.START: entry["start"]}
+           for entry in dataset.train
+       ],
+       freq=dataset.metadata.freq,
+    )
+    ```
+   
+2. define DeepAR estimator.
+  ```python
+  from gluonts.torch.model.deepar import DeepAREstimator
+  N_LAGS=7
+  HORIZON=7
+  estimator = DeepAREstimator(
+      prediction_length=HORIZON, # number of forecasting steps
+      context_length=N_LAGS, # number of steps to consider when forming input seq
+      freq=dataset.metadata.freq,
+      trainer_kwargs={"max_epochs": 100},
+  )
+  ```
+
+3. train model
+  ```python
+  predictor = estimator.train(train_ds)
+  ```
+4. make prediction
+  ```python
+  forecast_it, ts_it = make_evaluation_predictions(
+      dataset=dataset.test,
+      predictor=predictor,
+      num_samples=100,
+  )
+  forecasts = list(forecast_it)
+  tss = list(ts_it)
+  fig, ax = plt.subplots(1, 1, figsize=(10, 6))
+  ts_entry = tss[0]
+  ax.plot(ts_entry[-150:].to_timestamp())
+  forecasts[0].plot(show_label=True, ax=ax, intervals=())
+  ax.set_title("Forecast with DeepAR")
+  ax.legend()
+  plt.tight_layout()
+  plt.show ()
+  ```
+
+---
+
+### Transformer-based forecasting method: NueralForecast
+
+NueralForecast is a vanila transformer model for forecasting task. A transfomer model process entire input sequence at once. This is the main difference of a transfomer-based model compared with seq-to-seq approach such as LSTM. 
+
+The transformers model processes a time series data by encoding the sequence using the self-attention mechanism. This is a great advantage in the case in which dataset carries patterns/dependencies over a long horizon, or when the relevance of past data changes over time (dynamic dataset). The multi-head attention mechanism allows the Transformer to focus on different time steps and features concurrently, making it especially powerful for complex time series with multiple interacting patterns and seasonality.
+
+Data preparation for `nueralforecast` library: each observation consists of three peices of information: timestamp, time-series identifier, and corresponding value.
+
+Model creation [Ref.](https://nixtla.github.io/neuralforecast/models.vanillatransformer.html): creating/initializing a model requires to define a group of parameters, including forecasting steps, number of training sets, and early stopping.
+
+### Transformer-based forecating model: temporal fusion transformer (TFT) 
+
+TFT is an attention-based architecture, developed by Google. It uses its recurrent layers to learn temporal relasionships at different scales, combined with self-attention layers. It also has feature selection capability, and uses quantile loss function. 
+
+Some of the advantages of utilizing this model:
+- temporal processing
+- attention mechanism, which enables the model to dynamically assign importance to different time steps
+- gating mechanism: its gated residual network feature provides flexibility in the modeling process, adapting to the complexity of the data.
+- variable selection networks: it has capability to determine the relevance of each covariate to the forecsat, by weighting the input features' importance and filter out noise.
+- static covariate encoders, which encodes static information into multiple context vectors.
+- quantile prediction, provides a range of possible outcomes.
+- interpretable output, by providing feature importance.
+
+__Applications__
+- if there is a need to explain how the predictions are produced (utilizing variable network seelection and tempral multi-head attention layer).
+- it acts as both forecasting method and analytical tool.
+
+
+Building the model - example:
+```python
+from gluonts.torch.model.tft import TemporalFusionTransformerEstimator
+N_LAGS = 7
+HORIZON = 7
+estimator = TemporalFusionTransformerEstimator(
+    prediction_length=HORIZON,
+    context_length=N_LAGS,
+    freq=dataset.metadata.freq,
+    trainer_kwargs={"max_epochs": 100},
+)
+#make prediction
+from gluonts.evaluation import make_evaluation_predictions
+
+predictor = estimator.train(train_ds)
+forecast_it, ts_it = make_evaluation_predictions(
+    dataset=dataset.test,
+    predictor=predictor,
+    num_samples=100,
+)
+
+# visualize prediction
+import matplotlib.pyplot as plt
+ts_entry = tss[0]
+ax.plot(ts_entry[-150:].to_timestamp())
+forecasts[0].plot(show_label=True, ax=ax, intervals=())
+ax.set_title("Forecast with Temporal Fusion Transformer")
+ax.legend()
+plt.tight_layout()
+plt.show()
+```
+
+### Transformer-based forecasting model: Informer
+
+Informer is a Transformer-based forecasting model, tailored for long-term forecasting. IT has an improved attention mechism that reduces computational cost. 
+
+The input data requires three set of information: timestamp, ID of the time series, and value of the corresponding time series.
+
+Implementation example [ref.](https://nixtla.github.io/neuralforecast/models.informer.html):
+```python
+# define model
+from neuralforecast.core import NeuralForecast
+from neuralforecast.models import Informer
+N_LAGS = 7
+HORIZON = 7
+model = [Informer(h=HORIZON,
+    input_size=N_LAGS,
+    max_steps=1000,
+    val_check_steps=25,
+    early_stop_patience_steps=10)]
+nf = NeuralForecast(models=model, freq='D')
+
+# Train model
+nf.fit(df=df, val_size=val_size)
+
+# make prediction
+forecasts = nf.predict()
+forecasts.head()
+```
+### Compare the performance of different models (transformer-based)
+To compare the preformance of different models, we can employ cross-validation, train with train and validations sets, and evaluate on test set. The model with highest performance (based on its score on test set) is picked, and trained on the whole dataset as the final solution. 
+
+
+Example: compare performance of multiple trasnformer-based models
+```python
+# define models for the comparison
+
+from neuralforecast.models import Informer, VanillaTransformer
+models = [
+    Informer(h=HORIZON,
+        input_size=N_LAGS,
+        max_steps=1000,
+        val_check_steps=10,
+        early_stop_patience_steps=15),
+    VanillaTransformer(h=HORIZON,
+        input_size=N_LAGS,
+        max_steps=1000,
+        val_check_steps=10,
+        early_stop_patience_steps=15),
+]
+
+# perform comparison
+from neuralforecast.core import NeuralForecast
+nf = NeuralForecast(
+    models=models,
+    freq='D')
+cv = nf.cross_validation(df=df,
+    val_size=val_size,
+    test_size=test_size,
+    n_windows=None)
+
+# compute MAE
+from neuralforecast.losses.numpy import mae
+mae_informer = mae(cv['y'], cv['Informer'])
+mae_transformer = mae(cv['y'], cv['VanillaTransformer'])
+
+
+```
+
+# point forecasting - probabilistic time series forecasting
 
 
 ---
@@ -152,8 +385,8 @@ fig.show()
 
 - [TimeShap](https://github.com/feedzai/timeshap)
 - [Temporal fusion transformer (TFT)](https://pytorch-forecasting.readthedocs.io/en/stable/tutorials/stallion.html#Interpret-model)
-- []()
-- []()
+- [Pytorch forecasting](https://pytorch-forecasting.readthedocs.io/en/stable/tutorials.html)
+- [Nueral forest library](https://nixtla.github.io/neuralforecast/core.html)
 - []()
 - []()
 - []()
