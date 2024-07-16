@@ -63,28 +63,28 @@ A time series is stationary if its statistical properties do not change. Two pro
 
 1. seanonality
    
-  Since seasonality could break the stationary property of a time series, we remove the seasonality to improve the performance of a time series forecasting model. This could be achived by computing differencing as follow:
-  
-  Mehods 1:
-  1. Estimate the number of differencing steps required for stationarity. Example: augmented Dickey-Fuller test, or the KPSS test.
-  2. Apply the required number of differencing operations.
-  
-  Method 2:
-  1. differencing apply over seasonal periods.
-  2. seasonal differencing involves computing the difference between consecutive observations of the same seasonal period.
-  
-  [References](https://alkaline-ml.com/pmdarima/modules/generated/pmdarima.arima.ndiffs.html)
-  
+    Since seasonality could break the stationary property of a time series, we remove the seasonality to improve the performance of a time series forecasting model. This could be achived by computing differencing as follow:
+    
+    Mehods 1:
+    1. Estimate the number of differencing steps required for stationarity. Example: augmented Dickey-Fuller test, or the KPSS test.
+    2. Apply the required number of differencing operations.
+    
+    Method 2:
+    1. differencing apply over seasonal periods.
+    2. seasonal differencing involves computing the difference between consecutive observations of the same seasonal period.
+    
+    [References](https://alkaline-ml.com/pmdarima/modules/generated/pmdarima.arima.ndiffs.html)
+    
 2. variance:
 
-  Another property of time series that violates stationary property is variance. A time series with variance is called heteroskedasticity, and could be detected with a having a long-tail distribution.
+    Another property of time series that violates stationary property is variance. A time series with variance is called heteroskedasticity, and could be detected with a having a long-tail distribution.
+    
+    To remove heteroskedasticity, we need to follow these two steps
+    1. examine if the data is heteroskedasticity. Example White test or the Breusch-Pagan test
+    2. apply ransformation such as logarithm to stablize variance
   
-  To remove heteroskedasticity, we need to follow these two steps
-  1. examine if the data is heteroskedasticity. Example White test or the Breusch-Pagan test
-  2. apply ransformation such as logarithm to stablize variance
-
-
-[Reference](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.yeojohnson.html)
+  
+  [Reference](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.yeojohnson.html)
 
 ---
 ---
