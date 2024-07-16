@@ -1,6 +1,7 @@
 # Overview of time series 
 
-_Resampling__: change the frequency of time series
+
+__Resampling__: change the frequency of time series
 
 It is usedul for either of the following two scenarios:
 - changing the frequency
@@ -101,6 +102,43 @@ To remove heteroskedasticity, we need to follow these two steps
 
 [Reference](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.yeojohnson.html)
 
+---
+---
+
+# Univariate forecasting
+
+## Create baseline
+Baseline is used to evaluate if more sophisticated models actuly effective in learning from data, compare with the naive models. Also, they could be helpful in revealing a flaw in a complex model. Furthermore, naive models help to understand the data.
+
+__Some libraries__
+- [GluonTS](https://ts.gluon.ai/dev/api/gluonts/gluonts.model.seasonal_naive.html)
+- [sktime](https://www.sktime.net/en/stable/api_reference/auto_generated/sktime.forecasting.naive.NaiveForecaster.html)
+- [pytorch_forecasting](https://pytorch-forecasting.readthedocs.io/en/stable/api/pytorch_forecasting.models.baseline.Baseline.html)
+
+To create a baseline for forecasting, we can employ several approaches among which are:
+- __Naive__: the simplest method is naive approach, in which we assume the next observation will be the same as the last one.
+- __Seasonal naive__: this approach assumes the next observation will be similar to the previous observation from the same season.
+- __Mean__: in this apprach, we take the average of the past observation as the prediction for the future
+
+
+
+## ARIMA and SARIMA
+
+__ARIMA__
+ARIMA models explain a time series based on its past values. They combine aspects of autoregressive, integrated, and moving average models:
+- AR part: a regression where the next value of the time series is modeled based on the previous p lags.
+- I part: to make data stationary (ARIMA is defined for stationary data), the I part represents the number of differencing operations (d) required to make the series stationary.  
+- MA part: is another regression where the next value of the series is modeled based on the past q errors.
+
+__Determine ARIMA parameters: p,d,q__
+
+To determine ARIMA parameters we need to employ explantory methods such as checking the autocorrelation function (ACF) and the partial autocorrelation function (PACF) plots.
+
+__Note__: ARIMA assumes model is stationary.
+
+__SARIMA__
+
+SARIMA is an alternative method to ARIMA, for non-stationary time series with a seasonal component. 
 
 
 
@@ -136,6 +174,15 @@ To remove heteroskedasticity, we need to follow these two steps
 
 
 
+
+
+
+
+
+
+
+---
+---
 
 
 # Multi-variate and multi-step forecasting 
