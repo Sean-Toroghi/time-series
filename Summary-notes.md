@@ -1,3 +1,143 @@
+# Overview of time series 
+
+_Resampling__: change the frequency of time series
+
+It is usedul for either of the following two scenarios:
+- changing the frequency
+- dealing with irregular dataset
+
+[reference](https://pandas.pydata.org/docs/user_guide/timeseries.html#dateoffset-objects)
+
+---
+
+__missing values__
+
+- one common imputation approach is to replace missing values with central value (median, mean) `df.fillna(df.mean())`
+- another option is fill with the last known value: `df.ffill()`
+- also we can impute with the next known value: `df.bfill()`
+
+[reference](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.ffill.html)
+
+---
+
+__Decomposing time series__
+
+It is the process of splitting a time series into its components such as trend and seasonality.
+- trend can be estimated by computing moving average
+- seasonality can be estimated by averaging the values of each period.
+
+- Option 1- use statmodel library:
+```python
+from statsmodels.tsa.seasonal import seasonal_decompose
+result = seasonal_decompose(x=series_daily,
+                            model='additive',
+                            period=365)
+```
+
+- option 2 (assumption single season): use `STL()` function - Seasonal and Trend decomposition using LOESS (STL) in the statmodels libarary:
+```python
+from statsmodels.tsa.seasonal import STL
+result = STL(endog=series_daily, period=365).fit()
+```
+
+- option 3 (multiple seasons): use `MSTL()` function
+```python
+from statsmodels.tsa.seasonal import MSTL
+result = MSTL(endog=series_daily, periods=(7, 365)).fit()
+```
+
+---
+
+__Auto-correlation__
+
+ The autocorrelation function quantifies the linear relationship between a time series and a lagged version of itself.
+
+ [Reference](https://otexts.com/fpp3/components.html)
+
+ ---
+
+ __Stationary__
+
+A time series is stationary if its statistical properties do not change.
+
+Since seasonality could break the stationary property of a time series, we remove the seasonality to improve the performance of a time series forecasting model. This could be achived by computing differencing as follow:
+
+Mehods 1:
+1. Estimate the number of differencing steps required for stationarity. Example: augmented Dickey-Fuller test, or the KPSS test.
+2. Apply the required number of differencing operations.
+
+Method 2:
+1. differencing apply over seasonal periods.
+2. seasonal differencing involves computing the difference between consecutive observations of the same seasonal period.
+
+[References](https://alkaline-ml.com/pmdarima/modules/generated/pmdarima.arima.ndiffs.html)
+
+---
+
+__Stationary__
+
+A time series is stationary if its statistical properties do not change.
+
+Since seasonality could break the stationary property of a time series, we remove the seasonality to improve the performance of a time series forecasting model. This could be achived by computing differencing as follow:
+
+Mehods 1:
+1. Estimate the number of differencing steps required for stationarity. Example: augmented Dickey-Fuller test, or the KPSS test.
+2. Apply the required number of differencing operations.
+
+Method 2:
+1. differencing apply over seasonal periods.
+2. seasonal differencing involves computing the difference between consecutive observations of the same seasonal period.
+
+[References](https://alkaline-ml.com/pmdarima/modules/generated/pmdarima.arima.ndiffs.html)
+
+---
+
+Another property of time series that violates stationary property is variance. A time series with variance is called heteroskedasticity, and could be detected with a having a long-tail distribution.
+
+To remove heteroskedasticity, we need to follow these two steps
+1. examine if the data is heteroskedasticity. Example White test or the Breusch-Pagan test
+2. apply ransformation such as logarithm to stablize variance
+
+
+[Reference](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.yeojohnson.html)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Multi-variate and multi-step forecasting 
 
 A multivariate - mulsti-step forecasting means forecasting n-steps int he future, using a sequence of length m, with multiple features. There are several approaches to solve this problem, among which are:
