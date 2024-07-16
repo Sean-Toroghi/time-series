@@ -109,14 +109,13 @@ To create a baseline for forecasting, we can employ several approaches among whi
 ## ARIMA and SARIMA
 
 __ARIMA__
+
 ARIMA models explain a time series based on its past values. They combine aspects of autoregressive, integrated, and moving average models:
 - AR part: a regression where the next value of the time series is modeled based on the previous p lags.
 - I part: to make data stationary (ARIMA is defined for stationary data), the I part represents the number of differencing operations (d) required to make the series stationary.  
 - MA part: is another regression where the next value of the series is modeled based on the past q errors.
 
-__Determine ARIMA parameters: p,d,q__
-
-To determine ARIMA parameters we need to employ explantory methods such as checking the autocorrelation function (ACF) and the partial autocorrelation function (PACF) plots.
+__Determine ARIMA parameters: p,d,q__: to determine ARIMA parameters we need to employ explantory methods such as checking the autocorrelation function (ACF) and the partial autocorrelation function (PACF) plots.
 
 __Note__: ARIMA assumes model is stationary.
 
