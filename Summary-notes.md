@@ -548,10 +548,11 @@ mae_transformer = mae(cv['y'], cv['VanillaTransformer'])
 
 # point forecasting - probabilistic time series forecasting
 
-
+---
+# Time-series classification
 ---
 
-## Other refrences
+## some good refrences and pointers
 
 - [TimeShap](https://github.com/feedzai/timeshap)
 - [Temporal fusion transformer (TFT)](https://pytorch-forecasting.readthedocs.io/en/stable/tutorials/stallion.html#Interpret-model)
@@ -561,4 +562,4 @@ mae_transformer = mae(cv['y'], cv['VanillaTransformer'])
 - []()
 - []()
 - []()
-# Time-series classification
+
