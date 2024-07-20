@@ -545,6 +545,7 @@ mae_transformer = mae(cv['y'], cv['VanillaTransformer'])
 
 
 ```
+---
 
 # point forecasting - probabilistic time series forecasting
 
