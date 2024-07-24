@@ -281,8 +281,12 @@ __Steps__
       idx=0)
   ```
 
-### Optimizing the learning rate
-`lightning.pytorch` libarary has a moddule to optimize the model, which can be used to optimize learning rate: `from lightning.pytorch.tuner import Tuner`.
+### Optimizing the model
+Among differnet methods for optimizing the model performance, one approach is tuning learning rate ([ref](https://pytorch-forecasting.readthedocs.io/en/stable/tutorials.html)).
+
+`lightning.pytorch` libarary has a module (`Tuner`) to optimize the model, which can be used to tune the learning rate: `from lightning.pytorch.tuner import Tuner`. It tests different learning rates using training and validation sets. 
+
+
 
 Turner acts as a wrapper of the trainer object, and then use `lr_optim()` method to optimize learning rate. 
 
@@ -304,19 +308,20 @@ model = NBeats.from_dataset(
     backcast_loss_ratio=1.0,
 )
 
+# optimize learning rate
 lr_optim = tuner.lr_find(model,
     train_dataloaders=datamodule.train_dataloader(),
     val_dataloaders=datamodule.val_dataloader(),
     min_lr=1e-5)
 
+# retrieve optimum learning rate
 lr_optim.suggestion()
 fig = lr_optim.plot(show=True, suggest=True)
 fig.show()
 ```
 
 ### GluonTS: probabisting time series modeling with PyTorch
-`glounts` is library with array of utilities for tiume series data processing and model evaluation.
-
+`glounts` is library with array of utilities for time series data processing and model evaluation. It also provides various time-series architectures, and a range of datasets. Also this package contains a lsit of transformers for preprocessing and feature engineering, such as `AddAgeFeature`, which adds age feature to a dataset.  
 
 
 ### DeepAR model
