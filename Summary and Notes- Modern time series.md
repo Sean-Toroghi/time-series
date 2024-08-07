@@ -1,6 +1,63 @@
-<h1>Stochastic time series - from foudnation to edge approaches - 2023</h1>
+<h1>Stochastic time series - from foudnation to edge approaches</h1>
 
-# Overview
+Last update: 07/2024
+
+# Time series - overview
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+<h1> Cyclic time serie </h1>
 A time series can be constituted of a set of the multi-dimensional feature vectors ordered according to the time occurrence of the vectors.
 
 In a holistic view, there are three different ways to model dynamic contents of time series: deterministic, chaotic and stochastic model. 
