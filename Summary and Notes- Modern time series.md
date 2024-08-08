@@ -91,19 +91,37 @@ __Some imputation techniques__
   - `df[].interpolate(method="spline", order=2)`
   - `df[].interpolate(method="polynomial", order=5)`
 
+__Hnadling londer period of missing data__
+
+
+
 ### Compact, expanded, and wide data formats
 - Compact form data is when any particular time series occupies only a single row in the pandas DataFrame – that is, the time dimension is managed as an array within a DataFrame row.
 - The expanded form is when the time series is expanded along the rows of a DataFrame. If there are n steps in the time series, it occupies n rows in the DataFrame. The time series identifiers and the metadata get repeated along all the rows. The time-varying features also get expanded along the rows. And instead of the start date and frequency, we have the datetime as a column.
 - In the wide format, the date is represented as an index or as one of the columns and the different time series as different columns of the DataFrame.
 
-### Time eries frequency
-One of the most importatnt characteristic of a time series is regular intervals, and we need to make sure to enforce a regula intervals in the time series. __Best practice__ when working with multiple time series is to check the _end date_ of all the time series, and align them if they are not unform, based on the latest date acrros all time series. 
+### Time series frequency
+- Finding global end: One of the most importatnt characteristic of a time series is regular intervals, and we need to make sure to enforce a regula intervals in the time series. __Best practice__ when working with multiple time series is to check the _end date_ of all the time series, and align them if they are not unform, based on the latest date acrros all time series. 
+- 
 
-## pandas datetime operations, indexing, and slicing – a refresher
-## Handling missing data
-## Mapping additional information
-## Saving and loading files to disk
-##Handling longer periods of missing data
+# Analyzing and visualizing time series data -EDA
+## Components of a time series
+A time series can contain some or all of the following components:
+- trend: a long-term change in the mean of a time series.
+- seasonal: a regular, repetitive, up-and-down fluctuations
+- cyclical: Like seasonality, the cyclical component also exhibits a similar up-and-down pattern around the trend line, but instead of repeating the pattern every period, the cyclical component is irregular.
+- irregular: This component is left after removing the trends, seasonality, and cyclicity from a time series.
+- 
+Two very common mix of the above components are additive (sum of the above compoennts) and multiplicative (multiplication of the above components).
+
+While in classical time series, the irregular component assumed to be unpredicatable, with modern approaches (machine learning and deep learning) and help of exogenous variables we can predict a part or all of it. 
+
+## Visualizing time series data
+Some visualization techniques for a time series data are:
+- line chart: the most basic and common visualization that is used for understaing a time series i line chart. While for a long period, line chart could get chaotic, a macrowview of the time series in terms of trend and movement is more practical.
+
+## Decomposing a time series
+## Detecting and treating outliers
 
 
 
