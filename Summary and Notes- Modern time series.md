@@ -3,6 +3,11 @@
 Last update: 07/2024
 
 # Time series - overview
+__References__:
+- [A Survey on Principles, Models and Methods for Learning from Irregularly Sampled Time Series: From Discretization to Attention and Invariance](https://arxiv.org/abs/2012.00168)
+- [Learning from Irregularly-Sampled Time Series: A Missing Data Perspective](https://arxiv.org/abs/2008.07599)
+
+
 This summary goes beyound classical methods such as ARIMA, and starts with modern machine learning and deep learning techniques. However, some priliminary terms are common in time series analysis, no matter what techniques is employed.
 
 A __time series__ is a set of observations taken sequentially in time. This implies, if we record the same observation over time, we end up with a time series dataset. Two main types of time series are regular (recording at a regular interval) and iregular time series. The techniques in thsi summary covers regular time series. 
@@ -48,16 +53,27 @@ Three factors that helps to determine predictability of a time series are:
 - adeduatley repeating pattern
 
 ## Forecasting terminologies
-- __Forecasting__
-- __Multivariate forecasting__
-- __Explanatory forecasting__
-- __Backtesting__
-- __In-sample and out-sample__
-- __Exogenous and endogenous variables__
-- __Forecast combination__
+- __Forecasting__: predicting the future values of a time series, with the knowledge of past (either past values and/or other related varables)
+- __Multivariate forecasting__: if the problem in hand has more than one time series, that have dependencies among each other. 
+- __Explanatory forecasting__: using information other than the history of a variable values, to perform forecasting task.
+- __Backtesting__:the equivalent of validation, here we use the history to evaluate a trained model. 
+- __In-sample and out-sample__: in sample refers to training data, and out-sample refers to testing data. 
+- __Exogenous and endogenous variables__: Exogenous variables are parallel time series variables that are not modeled directly for output but used for modeling the time series that we are interested in. Endogenous variables are variables that are affected by other variables in the system. A purely endogenous variable is a variable that is entirely dependent on the other variables in the system. 
+- __Forecast combination__: similar to ensembling in machine learning, is a process by which a function (either heuristic or learned) is used to combine multiple forecast. 
 
 
 # Processing time series
+__References__
+- []()
+- []()
+- []()
+
+
+
+
+
+
+
 
 
 
