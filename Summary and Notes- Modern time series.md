@@ -71,9 +71,13 @@ __References__
 ## Understanding the time series dataset
 
 ### `datetime` data type
-Perhaps the most import priliminary action for procssing a time series in pandas dataframe format is to convert the date into pandas datetime format. After that, we will have access to a whole range of features, such as slicing, getting information about the date such as min or max, creating range, add or subtract days, weeks, or other time variables, and more. [Ref Link](https://pandas.pydata.org/docs/user_guide/timeseries.html#timeseries-offset-aliases)
+References: [Pandas datetime offset](https://pandas.pydata.org/docs/user_guide/timeseries.html#timeseries-offset-aliases)
+
+Perhaps the most import priliminary action for procssing a time series in pandas dataframe format is to convert the date into pandas datetime format. After that, we will have access to a whole range of features, such as slicing, getting information about the date such as min or max, creating range, add or subtract days, weeks, or other time variables, and more. 
 
 ### Missing values
+References: [Pandas interpolation](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.interpolate.html) and [scipy interpolation](https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.interp1d.html#scipy.interpolate.interp1d)
+
 Handling missing data in time series requires knowleddge about the data. For example, a missing order data in a time series from store orders may reflect store closure in a particular day, like Sunday. If we fill the gap with zero, model will have a false prediction for Monday's orders. On the other hand, if we gives extra information to the model (such as the previous day was Sunday), the model will perform differnt, and make a more accurate prediction. 
 
 __Note__: some of pandas useful `read_csv` parameters, w.r.t. missing values, are `na_values` and `keep_default_na`.
@@ -82,8 +86,18 @@ __Some imputation techniques__
 - Last Observation Carried Forward or Forward Fil (`df[].bfill()`): use the last observation to fill missing values
 - Mean value fill `df[].fillna(df[], mean())`: replace missing with the mean
 - Linear Interpolation `df[].interpolate(method="linear")`
-- Nearest Interpolation `df.interpolate(method="nearest")`: For each missing value, the closest observed value is found and is used to fill in the missing value
+- Nearest Interpolation `df.interpolate(method="nearest")`: For each missing value, the closest observed value is found and is used to fill in the missing value.
+- Spline, Polynomial, and Other Interpolations: `Scipy` package provides additional non-linear interpolation techniques as backend, by first fitting the model on a non-linear basis, and use it to perform imputation. While using spline or polynomial as the method in interpolate, we should always provide order as well. Example:
+  - `df[].interpolate(method="spline", order=2)`
+  - `df[].interpolate(method="polynomial", order=5)`
 
+### Compact, expanded, and wide data formats
+- Compact form data is when any particular time series occupies only a single row in the pandas DataFrame – that is, the time dimension is managed as an array within a DataFrame row.
+- The expanded form is when the time series is expanded along the rows of a DataFrame. If there are n steps in the time series, it occupies n rows in the DataFrame. The time series identifiers and the metadata get repeated along all the rows. The time-varying features also get expanded along the rows. And instead of the start date and frequency, we have the datetime as a column.
+- In the wide format, the date is represented as an index or as one of the columns and the different time series as different columns of the DataFrame.
+
+### Time eries frequency
+One of the most importatnt characteristic of a time series is regular intervals, and we need to make sure to enforce a regula intervals in the time series. __Best practice__ when working with multiple time series is to check the _end date_ of all the time series, and align them if they are not unform, based on the latest date acrros all time series. 
 
 ## pandas datetime operations, indexing, and slicing – a refresher
 ## Handling missing data
