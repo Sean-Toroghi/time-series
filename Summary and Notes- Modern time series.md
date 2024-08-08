@@ -70,6 +70,20 @@ __References__
 
 ## Understanding the time series dataset
 
+### `datetime` data type
+Perhaps the most import priliminary action for procssing a time series in pandas dataframe format is to convert the date into pandas datetime format. After that, we will have access to a whole range of features, such as slicing, getting information about the date such as min or max, creating range, add or subtract days, weeks, or other time variables, and more. [Ref Link](https://pandas.pydata.org/docs/user_guide/timeseries.html#timeseries-offset-aliases)
+
+### Missing values
+Handling missing data in time series requires knowleddge about the data. For example, a missing order data in a time series from store orders may reflect store closure in a particular day, like Sunday. If we fill the gap with zero, model will have a false prediction for Monday's orders. On the other hand, if we gives extra information to the model (such as the previous day was Sunday), the model will perform differnt, and make a more accurate prediction. 
+
+__Note__: some of pandas useful `read_csv` parameters, w.r.t. missing values, are `na_values` and `keep_default_na`.
+
+__Some imputation techniques__
+- Last Observation Carried Forward or Forward Fil (`df[].bfill()`): use the last observation to fill missing values
+- Mean value fill `df[].fillna(df[], mean())`: replace missing with the mean
+- Linear Interpolation `df[].interpolate(method="linear")`
+- Nearest Interpolation `df.interpolate(method="nearest")`: For each missing value, the closest observed value is found and is used to fill in the missing value
+
 
 ## pandas datetime operations, indexing, and slicing – a refresher
 ## Handling missing data
