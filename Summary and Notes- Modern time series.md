@@ -68,7 +68,14 @@ __References__
 - []()
 - []()
 
+## Understanding the time series dataset
 
+
+## pandas datetime operations, indexing, and slicing – a refresher
+## Handling missing data
+## Mapping additional information
+## Saving and loading files to disk
+##Handling longer periods of missing data
 
 
 
