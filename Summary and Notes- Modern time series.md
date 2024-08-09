@@ -204,6 +204,18 @@ g
 
 ---
 # Evaluating a forecasting model
+In multi-step forecasting, the goal is to forecast next $h$ steps($y_{t+1},\dots , y_{t+h}$). The classical statistical and econometric methods, such as ARIMA and exponential smoothing, can generate multiple timesteps as well as new approaches (machine learning and deep learning). However, there is a need to take specific strategy to perform multi-step forecasting. Some strategies to form a multi-step forecasting model are
+- recurisve
+- direct
+- joint
+- hybrid recursive and direct
+  - IBD
+  - DirRec
+  - Rectify
+- hybrid recurisive and joint
+  - RecJoint
+
+Given a window $w_t$ that draw a window of $Y_t = \[y_{1},\dots , y_{t}\]$
 
 
 
