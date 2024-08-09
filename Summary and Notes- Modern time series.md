@@ -127,7 +127,20 @@ Some visualization techniques for a time series data are:
 
 
 
+---
+# Machine learning approach
 
+## Regression
+
+---
+# Target trabsformation
+
+## Trend and deterending
+
+## Seasonality
+### Detect seasonality
+
+There are two popular ways to check for seasonality, apart from just eyeballing it: autocorrelation and fast Fourier transform.
 
 
 
