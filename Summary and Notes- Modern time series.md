@@ -258,7 +258,7 @@ Some studies combine the previous three main strategies, to perform multi-step f
 ## Comparison between multistep forecasting strategies
 The following table summarizes the strategeies described above. 
 
-<img src="https://github.com/user-attachments/assets/9b833b8b-3892-4dcc-8d17-896ea74b49c1" width="180" height="200">
+<img src="https://github.com/user-attachments/assets/9b833b8b-3892-4dcc-8d17-896ea74b49c1" width="380" height="200">
 
 
 
