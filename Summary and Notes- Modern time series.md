@@ -290,6 +290,62 @@ This [paper](https://arxiv.org/pdf/1108.3259.pdf) analysis the above methods and
 
 ---
 # Evaluating a forecasting model
+Evaluation metrics in this section has focus of point prediction. 
+
+## Taxonomy of forecast error measures
+
+Factors that distinguish the metrics in time series forecasting are:
+- temporal relevance: this is an essential part of a forecasting and metrics such as bias and tracking a signal focus on this aspect of a forecast.
+- aggregate metrics: in the case of forecasting multiple time series (related or unrelated) metric requires to capture the idiosyncrasies of this mix of time series, which is the focus of aggregate metrics.
+- over and under forecasting: when over or/and under forecast is combined with temporal aspect of time series, leads to error accumulation.
+
+Metrics could be divided into intrinsic and extrinsic, which each are then divided into subcategores. 
+- intrinsic metrics: employs the prediction and actual target values as input. Some of the metrics in this category are: absolute error, squared error, percent error, symetric error, other metrics such forecast bias (CFE) and tracking signal
+- extrinsic metrics: takes external reference or benchmark in addition to the generated forecast and ground truth to measure the quality of the forecast. Some of the metrics in this category are: relative error, scaled error, other metrics such as  PB
+
+### Intrinsic metrics
+__Absolute error__ = $|y_t - \hat{y_t}|$.  The absolute error is a scale-dependent error (magnitude of the error depends on the scale of the time series). This can cause problem in a case in which the errors are aggregated or compared accross multiple time-series. The scale-dependent errors skew the metric in favor of the large-scale time series. Some of the metrics that arebased on this error are
+- Mean absolute error
+- median absolute error
+- geometricmean absolute
+- weighted mean absolute error 
+- normalized deviation
+
+__Squared error__ = $(y_t - \hat{y_t})^2$. This error is also scale-dependent. Metrics that are based on this error are:
+- Mean square error
+- Root mean square error
+- geometric root mean square error
+- normalized root mean square error: similar to ND metric, but it take the square root of the squared errors in the numerator rather than the absolute error
+
+
+__Percent error__ = $\frac{100(y_t - \hat{y_t})}{y_t}$: a scale-free error measure. In which the the actual time series observations is used to scale the error. One downside of this error is it is asymmetrical and if actual observation be zero, the merics based on this error does not work. Some of metric that are based on this error are:
+- Mean absolute percent error
+- Median absolute precent error
+- WAPE: this metric explicitly weights the errors with the scale of the timestep. In many cases the weight is the quantity of observation, but it can take any other values. This metric is differnet from ND in that ND aggregates across multiple time series, but WAPE weightes across timesteps.
+
+__Symmetric error__ = $\frac{200(y_t - \hat{y_t})}{|y_t| + |\hat{y_t}|}$: this error is an alternative to precent error that fix the asymmetrical problem with the percent error. Note that even symmetric error in some cases is also asymmetrical. Metrics based on this error are:
+- Symmetric mean abosolute precent error
+- Symmetric median absolute precent error
+
+__Other intrinsic metrics__
+
+There are some other metrics that are intrinsic in nature, but don't confimr to the other metrics. Among which are the following:
+- Cummulative forecast error = $\sum (y_t - \hat{y_t})$: is the sum of all the errors, including the sign of the srror. It measures the degree of over and under forecasting, and is scaled-dependent. This metric helps to understand wether a forcast is consistently over or under forecasting over a given horizon. 
+- Forecast bias. this is a scale-independent metric that can be used for comparing time series, or investigate over and udner forecasting across time series.
+- Tracking signal: this metric is also used for measuring over and under forecasting, and is used in an online setting.  It helps us detect structural biases in the forecasting model. Typically, the Tracking Signal is used along with a threshold value so that going above or below (usually the threshold value used is 3.75) it throws a warning.
+
+### Extrinsic metrics
+There are two major buckets of metrics under the extrinsic umbrella – relative error and scaled error.
+
+__Relative error__
+
+__Scaled error__
+
+
+## Guidelines for choosing a metric
+
+## Validation strategies for evaluating forecasts
+
 
 ---
 ---
