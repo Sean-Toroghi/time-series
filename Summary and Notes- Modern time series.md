@@ -140,17 +140,55 @@ Some visualization techniques for a time series data are:
 ## Seasonality
 ### Detect seasonality
 
-There are two popular ways to check for seasonality, apart from just eyeballing it: autocorrelation and fast Fourier transform.
+There are two popular ways to check for seasonality, apart from just eyeballing it: autocorrelation and fast Fourier transform. Some of the strategies are:
+- best fit: chooses the best forecast accorsiding to the metric used for computing the error. 
 
 
 
+---
 
+# Ensemble and stacking 
 
+## Overview
+If we employ multiple forecasting models to make prediction, we need to pick a strategy to combine the results. Some of the strategies are as follow:
+- best fit: pick the forecast with the best fit, defined by the evaluation metric. One drawback of this method is that a model may perform well on validation set, but comes short in generalization and perform poor on the test set. Furthermore, a model does not fit time series similar to each other. This results in having inconsistency in the case when dealing with dynamic time series.
+- measure of central tendency: this method uses averag eor median to combine forecasts. However, this is not a good strategy, as it levels the strong and weak forecasts at the same time.
+- manual techniques such as trimming and skimming: trimming is done by discarding the worse forecast and use central tendency technique on the remaining forecasts. Skimming selects only the best n forecasts and applies dentral tendency on them.
+- heuristics-based approaches:
+  - hill climbing: building solution stage by stage. Here we select a local optimum at each stage, adpt a greedy and stagewise approach ti find the solution to a computationally feasible optimization problem. One method for the greedy algorithm is hill climbing.
+  - stochastic hill climbing: instead of evaluating all possible options and pick the best, in stochastic hill-climbing, a randomly picked candidate is adde to the solution if it performs better tha the current solution.
+  - Simulated annealing: a modified version of hill climbing, in which temperature parameter controls probability of accepting a model. Other parameters are number of iterations, picking the initial solution (random or best), and starting and ending probabilities.
+- Optimal weighted ensemble: via optimization algorithms, such as one provided by Scipy, we compute the weights for each forecast and use it to compute weighted average forecast as the final output.
+- __Stacking or blending__
+- Feature-Based Forecast Model Averaging (FFORMA) extracts a set of statistical features from the time series and uses it to train a machine learning model that predicts the weights in which the base forecast should be combined.
+- trains a classifier to predict which of the base learners does best, given a set of statistical features extracted from the time series.
 
+## Ensemble 
 
+Ensemble method tries to combine a diverse set of strong learners. The idea is each model captures some properties of the problem well, such as seasonality, interaction with exogenous vriable, and so on. The stacking model will be able to combine these base models into a model that learns to look toward one model for seasonality and the other for interaction. This is done by making the meta model learn the predictions of the base models. But to avoid data leakage and thereby avoid overfitting, the meta model should be trained on out-of-sample predictions. Two variation of this technique are _stacking_ and _blending_.
 
+- __Stacking__:the meta model is trained on the entire training dataset, but with out-of-sample predictions. Steps:
+  - Split the training dataset into k parts.
+  - Iteratively, train the base models on k-1 parts, predict on the kth part, and save the predictions. Once this step is done, we have the out-of-sample predictions for the training dataset from all base models.
+  - Train a meta model on these predictions.
+- __Blending__: generates out-of-sample predictions. Steps:
+  - Split the training dataset into two parts – train and holdout.
+  - Train the base models on the training dataset and predict on the holdout dataset.
+  - Train a meta model on the validation dataset with the predictions of the base model as the features.
 
+In most cases stacking works better, since it uses more data to trian the model. Note that the assumption in ensemble technique is that the training dataset is independent and identically distributed. If the data distribution changes significantly over time, blending the holdout period performs better (the meta model is trained on the latest data and captures recent temporal changes in distribution of data).
 
+The meta model is usually a simple model, such as linear regression, decision trees, or random forest (with low depth), as the actual work is performed by base models. 
+
+`pystacjnet` library can be used to make make the process of creating multi or single- level stacked ensemble model. 
+
+__Additional references__
+- []()
+- []()
+- []()
+- []()
+- []()
+- []()
 
 
 
