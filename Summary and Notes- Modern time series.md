@@ -224,7 +224,7 @@ During training, a single model is trained to perform single step ahead forecast
 
 __Direct strategy__
 
-Also called independent stragey, is popular when using machine learning approach. In this approach $len(h)$ models are trained on input windows $w_t$, and each generates an independent forecast of one value in the horizon: $model_1 \rightarrow y_{t+1}, model_2 \rightarrow y_{t+2}, \dots, \text{model}_h \rightarrow y_{t+h}$
+Also called independent stragey, is popular when using machine learning approach. In this approach $len(h)$ models are trained on input windows $w_t$, and each generates an independent forecast of one value in the horizon: $model_1 \rightarrow y_{t+1}, model_2 \rightarrow y_{t+2}, \dots,  model_h \rightarrow y_{t+h}$
 
 
 
