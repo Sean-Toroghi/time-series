@@ -256,9 +256,9 @@ Some studies combine the previous three main strategies, to perform multi-step f
   - During the forecating phase, similar to recursive strategy, the model forecast the next time-step, the forecast value added to the input and fed into the model for the next step forecast, until reaching the horizon.
  
 ## Comparison between multistep forecasting strategies
-The following table summarizes the strategeies described above. 
-
-<img src="https://github.com/user-attachments/assets/9b833b8b-3892-4dcc-8d17-896ea74b49c1" width="380" height="200">
+The following table summarizes the strategeies described above ([ref](https://learning.oreilly.com/api/v2/epubs/urn:orm:book:9781803246802/files/image/B17959_17_09.jpg)). 
+<https://github.com/user-attachments/assets/9b833b8b-3892-4dcc-8d17-896ea74b49c1>
+<img src="https://learning.oreilly.com/api/v2/epubs/urn:orm:book:9781803246802/files/image/B17959_17_09.jpg" width="380" height="200">
 
 
 
