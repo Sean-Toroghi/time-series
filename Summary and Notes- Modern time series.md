@@ -209,7 +209,7 @@ In multi-step forecasting, the goal is to forecast next $h$ steps($y_{t+1},\dots
 - direct
 - joint
 - hybrid recursive and direct
-  - IBD
+  - Iterative block-wise direct strategy (IBD)
   - DirRec
   - Rectify
 - hybrid recurisive and joint
@@ -217,15 +217,26 @@ In multi-step forecasting, the goal is to forecast next $h$ steps($y_{t+1},\dots
 
 Given a window $w_t$ that draws a window $Y_t = \[y_{1},\dots , y_{t}\]$ and forecast horizon $h$, each of the above strategies are formulated in the following.
 
-__Recursive strategy__
+__Recursive strategy (Multi-step in, single step out)__
 
 During training, a single model is trained to perform single step ahead forecast: $w_t \rightarrow y_{t+1}$ the next interation the forecast value is added to the windows and feeds into the model to generate the next forecast: $w_{t+1} \rightarrow y_{t+2}$
  
 
-__Direct strategy__
+__Direct strategy (Multi-step in, single step out)__
 
-Also called independent stragey, is popular when using machine learning approach. In this approach $len(h)$ models are trained on input windows $w_t$, and each generates an independent forecast of one value in the horizon: $model_1 \rightarrow y_{t+1}, model_2 \rightarrow y_{t+2}, \dots,  model_h \rightarrow y_{t+h}$
+Also called independent stragey, is popular when using machine learning approach. Model has single output. To achive horizon forecasting, this approach trains $len(h)$ models on the same input windows $w_t$, and each generates an independent forecast of one value in the horizon: $$w_t \rightarrow model_1 \rightarrow y_{t+1}, w_t \rightarrow model_2 \rightarrow y_{t+2}, \dots, w_t \rightarrow model_h \rightarrow y_{t+h}$$. During the forecating stage, the models are then fed with the same input and each generate a single value in the horizon. 
 
+__Joint strategy (Multi-step in, Multi-step out)__
+
+This method trains a model that get a windows $w_t$ as input, and generates a multi-step output in the size of horizon. MAchine-learning and deep-learning approaches are capable of performing joint strategy such as tabular regression, seq-to-seq models, attention and transformers -based models, and specialized deep learning models (N-Beat, N-HiTS, Temporal Fusion Transformer). 
+
+__Hybrid strategies__
+
+Some studies combine the previous three main strategies, to perform multi-step forecasting as a hybrid strategy.
+
+- DirRex stratgy: a combination of direct and recursive strategies. We have $len(h)$ models. During the training phase, windows size $t$ is fed into the first model, and single output is generated: $w_t \rightarrow model_1 \rightarrow \hat{y_{t+1}}$. Then the output is added to the original windows and fed into the second model to generatethe second value in the horizon: $w_{t+1} \rightarrow model_2 \rightarrow \hat{y_{t+2}}$. This process continues until reachign the last value in the horizon. During the forecasting phase, the same procedure is performed to generate a multi-step output. One shortcomming of this method is in the case of long horizon, this approach requires to train many models.
+- Iterative block-wise direct strategy (IBD) (also called the iterative multi-SVR strategy): This model address the issue of long horizon forecasting in DirRect approach by diving the horizon into $R$ blocks, each with length $L$. Then instead of tarining $len(h)$ models, we train $L$ direct models $$w_t \rightarrow model_1 \rightarrow y_{t+1}, w_t \rightarrow model_2 \rightarrow y_{t+2}, \dots, w_t \rightarrow model_L \rightarrow y_{t+L}$$.
+  - during forecating phase, the an issue with DirRect methodemploys multiple models, but unlike DirRect, the input to each model is the same windows $w_t$. 
 
 
 
