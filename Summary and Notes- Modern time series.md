@@ -191,7 +191,37 @@ __Additional references__
 - []()
 
 
+---
+# Global forecasting
+In global forecasting paradigm, a single model predicts a range of time series together. 
+g
+--- 
+# Deep learning for time series forecating
 
+
+---
+# Multistep forecasting
+
+---
+# Evaluating a forecasting model
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+---
 
 
 
