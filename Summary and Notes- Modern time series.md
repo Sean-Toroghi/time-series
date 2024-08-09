@@ -234,8 +234,14 @@ __Hybrid strategies__
 
 Some studies combine the previous three main strategies, to perform multi-step forecasting as a hybrid strategy.
 
-- DirRex stratgy: a combination of direct and recursive strategies. We have $len(h)$ models. During the training phase, windows size $t$ is fed into the first model, and single output is generated: $w_t \rightarrow model_1 \rightarrow \hat{y_{t+1}}$. Then the output is added to the original windows and fed into the second model to generatethe second value in the horizon: $w_{t+1} \rightarrow model_2 \rightarrow \hat{y_{t+2}}$. This process continues until reachign the last value in the horizon. During the forecasting phase, the same procedure is performed to generate a multi-step output. One shortcomming of this method is in the case of long horizon, this approach requires to train many models.
-- Iterative block-wise direct strategy (IBD) (also called the iterative multi-SVR strategy): This model address the issue of long horizon forecasting in DirRect approach by diving the horizon into $R$ blocks, each with length $L$. Then instead of tarining $len(h)$ models, we train $L$ direct models $$w_t \rightarrow model_1 \rightarrow y_{t+1}, w_t \rightarrow model_2 \rightarrow y_{t+2}, \dots, w_t \rightarrow model_L \rightarrow y_{t+L}$$.
+- DirRex stratgy: a combination of direct and recursive strategies. We have $len(h)$ models.
+  - During the training phase, windows size $t$ is fed into the first model, and single output is generated: $w_t \rightarrow model_1 \rightarrow \hat{y_{t+1}}$. Then the output is added to the original windows and fed into the second model to generatethe second value in the horizon: $w_{t+1} \rightarrow model_2 \rightarrow \hat{y_{t+2}}$. This process continues until reachign the last value in the horizon.
+  - During the forecasting phase, the same procedure is performed to generate a multi-step output. One shortcomming of this method is in the case of long horizon, this approach requires to train many models.
+- Iterative block-wise direct strategy (IBD) (also called the iterative multi-SVR strategy): This model address the issue of long horizon forecasting in DirRect approach by diving the horizon into $R$ blocks, each with length $L$.
+  - Training phase: instead of tarining $len(h)$ models, we train $L$ direct models
+
+  $$w_t \rightarrow model_1 \rightarrow y_{t+1}, w_t \rightarrow model_2 \rightarrow y_{t+2}, \dots, w_t \rightarrow model_L \rightarrow y_{t+L}$$.
+
   - during forecating phase, the an issue with DirRect methodemploys multiple models, but unlike DirRect, the input to each model is the same windows $w_t$. 
 
 
