@@ -257,13 +257,21 @@ Some studies combine the previous three main strategies, to perform multi-step f
  
 ## Comparison between multistep forecasting strategies
 The following table summarizes the strategeies described above ([ref](https://learning.oreilly.com/api/v2/epubs/urn:orm:book:9781803246802/files/image/B17959_17_09.jpg)). 
-<https://github.com/user-attachments/assets/9b833b8b-3892-4dcc-8d17-896ea74b49c1>
+
+[](https://github.com/user-attachments/assets/9b833b8b-3892-4dcc-8d17-896ea74b49c1)
+
+
 <img src="https://learning.oreilly.com/api/v2/epubs/urn:orm:book:9781803246802/files/image/B17959_17_09.jpg" width="380" height="200">
 
 
+- Complexity:  Recursive, Joint, RecJoint << IBD << Direct, DirRec << Rectify
+- Training time: Recursive << Joint << RecJoint << IBD << Direct, DirRec << Rectify
+- Inference time: Joint << Direct, Recursive, DirRec, IBD, RecJoint << Rectify
 
 
+Another key element is the kind of model is used. For example, the joint strategy requires a model that can generate a multi-step output. 
 
+This [paper](https://arxiv.org/pdf/1108.3259.pdf) analysis the above methods and here is a summary of the fining: 
 
 
 
