@@ -202,8 +202,7 @@ g
 ---
 # Multistep forecasting
 
----
-# Evaluating a forecasting model
+
 In multi-step forecasting, the goal is to forecast next $h$ steps($y_{t+1},\dots , y_{t+h}$). The classical statistical and econometric methods, such as ARIMA and exponential smoothing, can generate multiple timesteps as well as new approaches (machine learning and deep learning). However, there is a need to take specific strategy to perform multi-step forecasting. Some strategies to form a multi-step forecasting model are
 - recurisve
 - direct
@@ -271,11 +270,26 @@ The following table summarizes the strategeies described above ([ref](https://le
 
 Another key element is the kind of model is used. For example, the joint strategy requires a model that can generate a multi-step output. 
 
+__Compare different blending/stacking strategies__
+
 This [paper](https://arxiv.org/pdf/1108.3259.pdf) analysis the above methods and here is a summary of the fining: 
 
+- bias and variance component of the error in recusive strategy accumulates as we go further into the horizon. As the result, direct strategy performs better in this area.
+- Direct strategy, due to independency of models, could prodcue inconsistence output. Also it cannot capture dependency between forecast in the horizon, and the outcome could be in the form of a broken curve.
+- Joint strategy does not have the issue of generating unrelated forecast (as mentioned above for direct strategy)
+- A weakness of joint strategy is its high bias for short time series.
+- Joint and RecJoint both have similar variance, while joint strategy has lower bias.
+- In most cases, direct strategy generates more coherent forecast.
+- bias for the recursive strategy amplifies when the forecasting model produces forecasts that have large variations. This is more prevalent in the case of employing complex model, which have high variance and low bias.
+- in the case of _large dataset_ bias term of error in direct strategy goes to zero, but recursive strategy will have a non-zero bias.
+- Recursive strategy has the following advantage, compare with direct strategy:
+  - in the case of non-linear and noisy time series, recursive works better
+  - if the underlying DGP be very smooth and easy to approximate, recusive strategy works better
+  - recursive strategy works better in the case of short time series
+- hybrid strategies try to balance the merits of the fundamental strategies, while mitigating their shortcommings. 
 
-
-
+---
+# Evaluating a forecasting model
 
 ---
 ---
