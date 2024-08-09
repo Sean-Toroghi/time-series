@@ -215,9 +215,16 @@ In multi-step forecasting, the goal is to forecast next $h$ steps($y_{t+1},\dots
 - hybrid recurisive and joint
   - RecJoint
 
-Given a window $w_t$ that draw a window of $Y_t = \[y_{1},\dots , y_{t}\]$
+Given a window $w_t$ that draws a window $Y_t = \[y_{1},\dots , y_{t}\]$ and forecast horizon $h$, each of the above strategies are formulated in the following.
 
+__Recursive strategy__
 
+During training, a single model is trained to perform single step ahead forecast: $w_t \rightarrow y_{t+1}$ the next interation the forecast value is added to the windows and feeds into the model to generate the next forecast: $w_{t+1} \rightarrow y_{t+2}$
+ 
+
+__Direct strategy__
+
+Also called independent stragey, is popular when using machine learning approach. In this approach $len(h)$ models are trained on input windows $w_t$, and each generates an independent forecast of one value in the horizon: $\text{model}_1 \rightarrow y_{t+1}, \text{model}_2 \rightarrow y_{t+2}, \dots, \text{model}_h \rightarrow y_{t+h}$
 
 
 
