@@ -224,7 +224,11 @@ During training, a single model is trained to perform single step ahead forecast
 
 __Direct strategy (Multi-step in, single step out)__
 
-Also called independent stragey, is popular when using machine learning approach. Model has single output. To achive horizon forecasting, this approach trains $len(h)$ models on the same input windows $w_t$, and each generates an independent forecast of one value in the horizon: $$w_t \rightarrow model_1 \rightarrow y_{t+1}, w_t \rightarrow model_2 \rightarrow y_{t+2}, \dots, w_t \rightarrow model_h \rightarrow y_{t+h}$$. During the forecating stage, the models are then fed with the same input and each generate a single value in the horizon. 
+Also called independent stragey, is popular when using machine learning approach. Model has single output. To achive horizon forecasting, this approach trains $len(h)$ models on the same input windows $w_t$, and each generates an independent forecast of one value in the horizon: 
+
+$$w_t \rightarrow model_1 \rightarrow y_{t+1}, w_t \rightarrow model_2 \rightarrow y_{t+2}, \dots, w_t \rightarrow model_h \rightarrow y_{t+h}$$. 
+
+During the forecating stage, the models are then fed with the same input and each generate a single value in the horizon. 
 
 __Joint strategy (Multi-step in, Multi-step out)__
 
@@ -234,17 +238,27 @@ __Hybrid strategies__
 
 Some studies combine the previous three main strategies, to perform multi-step forecasting as a hybrid strategy.
 
-- DirRex stratgy: a combination of direct and recursive strategies. We have $len(h)$ models.
+- **DirRex stratgy**: a combination of direct and recursive strategies. We have $len(h)$ models.
   - During the training phase, windows size $t$ is fed into the first model, and single output is generated: $w_t \rightarrow model_1 \rightarrow \hat{y_{t+1}}$. Then the output is added to the original windows and fed into the second model to generatethe second value in the horizon: $w_{t+1} \rightarrow model_2 \rightarrow \hat{y_{t+2}}$. This process continues until reachign the last value in the horizon.
   - During the forecasting phase, the same procedure is performed to generate a multi-step output. One shortcomming of this method is in the case of long horizon, this approach requires to train many models.
-- Iterative block-wise direct strategy (IBD) (also called the iterative multi-SVR strategy): This model address the issue of long horizon forecasting in DirRect approach by diving the horizon into $R$ blocks, each with length $L$.
+- **Iterative block-wise direct strategy (IBD)** (also called the iterative multi-SVR strategy): This model address the issue of long horizon forecasting in DirRect approach by diving the horizon into $R$ blocks, each with length $L$.
   - Training phase: instead of tarining $len(h)$ models, we train $L$ direct models
 
   $$w_t \rightarrow model_1 \rightarrow y_{t+1}, w_t \rightarrow model_2 \rightarrow y_{t+2}, \dots, w_t \rightarrow model_L \rightarrow y_{t+L}$$.
 
-  - during forecating phase, the an issue with DirRect methodemploys multiple models, but unlike DirRect, the input to each model is the same windows $w_t$. 
+  - during forecating phase, the the $L$ trained models generate forecast for the first $L$ timesteps. These values are then used as input to generate the next batch of forecst, until we reach the full horizon forecast.
 
+- __Rectify strategy__: is the combination of direct and recustive strategy, that consists of two-stage strategy for training and inference.
+  - During the training phase: in step.1 a model is trained to generate a single step forecast from windows $w_t$. In step 2, the forecast value is added to the windows and is used for $len(h)$ models each generate a single-step forecast for one of the values in the horizon.
+  - During the forecasting phase, at step1, the first model trained in step1 of training phase is used recursively to generate single forecast. The first steo in recusrive feeds $w_t$ into the model and generates single step forecast $\hat{y_{t+1}}$. It then added to the windows $w_t$ to be used as the input to the same model and generate the second forecast value $\hat{y_{t+2}}$. This process continues until we reach horizon. In the second step, the $len(h)$ models trained in step2 of training are fed with concatenation of original windows and forecasted windows in step1, to each generate a single-step forecast correspond to a value in the horizon.
+- __RecJoint__: is the combination of recursive nad joint strategy, but applies to a single-step forecating model.
+  - During the training, a single model is trained to predict a single-step output. Then the output is added to the input for trainig the next output, until reaching the horizon. The model is jointly optimizes the entire horizon forecasts during the training. This forces the model to look at the next H timesteps and jointly optimize the entire horizon instead of the myopic one-step-ahead objective. Models such as seq-to-seq and RNN also employ this strategy.
+  - During the forecating phase, similar to recursive strategy, the model forecast the next time-step, the forecast value added to the input and fed into the model for the next step forecast, until reaching the horizon.
+ 
+## Comparison between multistep forecasting strategies
+The following table summarizes the strategeies described above. 
 
+<img ref ='https://github.com/user-attachments/assets/9b833b8b-3892-4dcc-8d17-896ea74b49c1', width ='150', hieght = '150'>
 
 
 
