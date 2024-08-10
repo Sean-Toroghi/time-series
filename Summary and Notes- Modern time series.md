@@ -401,9 +401,14 @@ Some guideliens for picking a validation strategy:
 ### Validation strategies for a dataset with multiple time series
 
 For a dataset with multiple time series, developing a validation strategy requires some additional considerations. Some options to adopt valiation strategy for the datasets with multiple time series are:
--   
- 
+- loop over the different time series and use the appropriate validation strategy for training. The concatenate the results across time series.
+- code a cusome group split class by employing datetime or time index (similar to strategies for global deep learning methods) as  the group. Then use repeating holout strategy.
+- The window for differnet time series requires to be consistent in length.
+- 
 
+
+---
+---
 
 
 
