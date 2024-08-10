@@ -365,14 +365,47 @@ There are three aspects of a holdout strategy, and they can be mixed and matched
 
    This method training the model again with new training split for every origin. The retrained model is then used to evaluate the validation split. For the update strategy, the original trained model is used.
 
+__Downside of holdout strategy__
+
+This strategy relies on a single split of data to evalute model performance. For non-stationary series, this can cause a problem since the selected model may capture the the idiosyncrasies of the split that we have chosen.
+
+
+__Sampling strategy__
+To mitigate the issue with single holdout, repeating holdout strategy is employed. Scikit-learn has `sklearn.model_selection.PredefinedSplit` class to perform this approach. Also it has `TimeSeriesSplit` to perform split.
+
+This approach has several variants, including:
+- with no overlap
+- with overlap
+- no overlap with gaps
+ 
 ### cross-validation strategies
+The cross-validation method repeats the holdout evaluation multiple time, and measure the performance of a system by averaging the performance on different splits. This requires sampling multiple windows at random or using predefined windows as validation splits.
+
+A similar approach to machine learning k-fold cross-validation, but developed for time series is blocked cross-validation method [paper](https://doi.org/10.1007/978-3-642-61564-1_4). This method does not randomly shuffle the dataset before partitioning into k subsets (each of length $L_v$). Instead, the paritioning results in $k$ contiguous blocks of observation. Then similar to k-fold method, the train and test are performed, while temporal integrity of the problem is satisfied. To implement this method, we can employ the standard sklearn method, but set the shuffle to False. 
+
+Similar to holdout method, there is a variant of cross-validation with gap. To implement this method, we need to manualy code it. 
+
 
 ### How to pick the best validation strategy
+Some guideliens for picking a validation strategy:
+- the validation strategy needs to be align with the real use of model. For example, if the model is going to be used for predicting next 60 days, the validation set also needs  to have length of 60 days.
+- A preferred method in general, is repeating holdout strategy.
+- For a pure autoregressive formulation of a stationary time series, regular k-fold method shows better performance than holdout methods [ref](https://www.sciencedirect.com/science/article/abs/pii/S0020025511006773). 
+- Blocked-cross-validation is better alternative than other cross-validation methods [ref](https://doi.org/10.1007/s10994-020-05910-7)
+- For a non-stationary time series, repeating hold-out stratgy performs the best [ref]()
+- For a short time series, blocked-cross-validation (after meking the time series stationary) performs the best.
+- For time series with exogenous variables, holdout strategies perform better than other methods.
+- Models that use some kind of memory of past such as exponential smoothening or RNN, cross-validation does not perform well.
+- For a strong sesonal time series, the validation period needs to mimic the forecast horizon for the best performance.
 
 ### Validation strategies for a dataset with multiple time series
 
----
----
+For a dataset with multiple time series, developing a validation strategy requires some additional considerations. Some options to adopt valiation strategy for the datasets with multiple time series are:
+-   
+ 
+
+
+
 
 
 
