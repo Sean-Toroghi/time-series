@@ -360,7 +360,7 @@ There are three aspects of a holdout strategy, and they can be mixed and matched
   - Rolling window removes the oldest data from training. If the time series is non-stationary and the behavior is bound to change as time passes, having a rolling window will be beneficial to keep the model up to date.
   - When we use the expanding window strategy for repeated evaluation, such as in cross-validation, the increase in time series length used for training can introduce some bias toward windows with a longer history. The rolling window strategy takes care of that bias by maintaining the same length of the series.
   
-4. Calibration strategy – A calibration strategy decides whether a model should be recalibrated or not.
+3. Calibration strategy – A calibration strategy decides whether a model should be recalibrated or not. The calibration strategy is only valid in cases where we do multiple evaluations with different origins.
 
 
 ### cross-validation strategies
