@@ -348,6 +348,7 @@ __Scaled error__
 Validation strategy is another important integral part of a time series forecasting. Due to temporal characteristic of a time series data, it is not possible to use conventional machine learning approach to evaluat a trained model. For a time sereis data, standard assumption od i.i.d. does not hold true. Ther are two main paradigm of validation: in-sample and out-of sample validations. While in-sample validation used to be the standard method for classical statistical model, modern machine learning models almost all employ out-of sample validation. For out-of sample validation, there are two major schools  of thoughts: 1. holdout-based strategies and 2- cross-validation- based strategies.
 
 ### holdout strategies
+Summaru: In this approach, we sample an original point n the time series (preferably toward the end of the series), such thath the portion o ftime series after that point be shoorter than the portion before it. The via either rolling window or expanding method, we generate a training and validation split. Train the model on training, and test it on the hold-out validation split. 
 There are three aspects of a holdout strategy, and they can be mixed and matched to create many variations of the strategy. The three aspects are as follows:
 
 1. Sampling strategy – A sampling strategy is how we sample the validation split(s) from training data. This method picks  one or more points in the time series and based on the predefined length of the validation $L_v$ parameter, it extracts that piece of data from the time series dataset.
@@ -360,8 +361,9 @@ There are three aspects of a holdout strategy, and they can be mixed and matched
   - Rolling window removes the oldest data from training. If the time series is non-stationary and the behavior is bound to change as time passes, having a rolling window will be beneficial to keep the model up to date.
   - When we use the expanding window strategy for repeated evaluation, such as in cross-validation, the increase in time series length used for training can introduce some bias toward windows with a longer history. The rolling window strategy takes care of that bias by maintaining the same length of the series.
   
-3. Calibration strategy – A calibration strategy decides whether a model should be recalibrated or not. The calibration strategy is only valid in cases where we do multiple evaluations with different origins.
+3. Calibration strategy – A calibration strategy decides whether a model should be recalibrated or not. The calibration strategy is only valid in cases where we do multiple evaluations with different origins. The calibration strategy is fixed at recalibrate because we are only testing and evaluating the model once.
 
+   This method training the model again with new training split for every origin. The retrained model is then used to evaluate the validation split. For the update strategy, the original trained model is used.
 
 ### cross-validation strategies
 
