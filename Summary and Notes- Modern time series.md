@@ -194,15 +194,77 @@ __Additional references__
 ---
 # Global forecasting
 In global forecasting paradigm, a single model predicts a range of time series together. 
-g
+
+
 --- 
 # Deep learning for time series forecating
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ---
 # Multistep forecasting
-
-
 In multi-step forecasting, the goal is to forecast next $h$ steps($y_{t+1},\dots , y_{t+h}$). The classical statistical and econometric methods, such as ARIMA and exponential smoothing, can generate multiple timesteps as well as new approaches (machine learning and deep learning). However, there is a need to take specific strategy to perform multi-step forecasting. Some strategies to form a multi-step forecasting model are
 - recurisve
 - direct
@@ -387,6 +449,8 @@ Similar to holdout method, there is a variant of cross-validation with gap. To i
 
 
 ### How to pick the best validation strategy
+[Ref](https://www.kaggle.com/code/konradb/ts-10-validation-methods-for-time-series)
+
 Some guideliens for picking a validation strategy:
 - the validation strategy needs to be align with the real use of model. For example, if the model is going to be used for predicting next 60 days, the validation set also needs  to have length of 60 days.
 - A preferred method in general, is repeating holdout strategy.
@@ -404,45 +468,10 @@ For a dataset with multiple time series, developing a validation strategy requir
 - loop over the different time series and use the appropriate validation strategy for training. The concatenate the results across time series.
 - code a cusome group split class by employing datetime or time index (similar to strategies for global deep learning methods) as  the group. Then use repeating holout strategy.
 - The window for differnet time series requires to be consistent in length.
-- 
 
 
 ---
 ---
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
