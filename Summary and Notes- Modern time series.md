@@ -1,4 +1,4 @@
-<h1>Stochastic time series - from foudnation to edge approaches</h1>
+<h1>Stochastic time series - from foudnation to edge approaches</h1> 
 
 Last update: 07/2024
 
