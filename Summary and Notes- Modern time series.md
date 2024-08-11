@@ -375,7 +375,15 @@ Major parameters of Autoformer:
 TFT is a high-performing, interpretable, and global DL model is thoughtfully designed from the ground up to make the most efficient use of all the different kinds of information.
 
 __Forecasting with TFT__: PyTorch Forecasting has an implementation of TFT.  The `TemporalFusionTransformer` class in PyTorch Forecasting has the following major parameters:
+- hidden_size: This is an integer representing the hidden dimension across the model. This is the dimension in which all the GRNs work, the VSN, the LSTM hidden sizes, the self-attention hidden sizes, and so on. Arguably, this is the most important hyperparameter in the model.
+- lstm_layers: This is an integer that determines the number of layers in the LSTMs we use in the LE Seq2Seq block.
+- attention_head_size: This is an integer representing the number of attention heads.
+- embedding_sizes: This is a dictionary of categorical feature names to a tuple of (cardinality, embedding size). Although the original paper suggests projecting all categorical and continuous variables to a single dimension, the PyTorch Forecasting implementation allows the flexibility to have separate dimensions for each variable.
+- hidden_continuous_size: This is an integer that is the default embedding size for continuous features.
+- hidden_continuous_sizes: This is a dictionary of continuous feature names to a hidden size for variable selection. This lets us override hidden_continuous_size for specific features.
+- dropout: This is a float between 0 and 1, which determines the strength of the dropout in the network.
 
+- 
 ### Interpretability
 
 
