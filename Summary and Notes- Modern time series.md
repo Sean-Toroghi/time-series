@@ -199,6 +199,197 @@ In global forecasting paradigm, a single model predicts a range of time series t
 --- 
 # Deep learning for time series forecating
 
+## Concept of encoder-decoder in deep learning and different architectures
+
+The encoder takes in the input vector, $x$, and encodes it into a latent space. This encoded representation is called the latent vector, $z$. The decoder then takes $z$, and decodes it into the kind of output we need ($\hat{y}$). Latent space is an abstract vector space that encodes a meaningful internal representation of the feature space.
+
+ In the context of time series forecasting, the encoder consumes the history and retains the information that is required for the decoder to generate the forecast.
+
+### Feed-forward networks (FFNs) (also called fully connected networks)
+In the time series forecasting context, an FFN can be used as an encoder as well as a decoder. As an encoder, we embed time and convert a time series problem into a regression problem before feeding it into the FFN. As a decoder, we use it on the latent vector (the output from the encoder) to get to the output (this is the most common usage of an FFN in time series forecasting). Constructing a FFN with PyTorch can be done with `nn.Sequential`.
+
+__Example: simple FFN model__
+```python
+# generate time series dataset with sliding window
+ts = torch.from_numpy(df['value'].values).float()
+window_size = 10
+ts_dataset = ts.unfold(0, window_size, 1)
+ts_dataset.shape, ts_dataset[0], ts_dataset[1]
+
+# Create FFN model
+FFN_model = nn.Sequential(
+    nn.Linear(in_features = window_size, out_features = 64), # (batch-size x window) --> (batch-size x 64)
+    nn.ReLU(),
+    nn.Linear(64, 32), # (batch-size x 64) --> (batch-size x 32)
+    nn.ReLU(),
+    nn.Linear(32, 1) # (batch-size x 32) --> (batch-size x 1)
+    )
+
+# Get forecast (assuming model has gone through training)
+output = FFN_model(ts_dataset) # equivalent to FFN_model.forward(ts_dataset)
+# output shape (11,1)
+output.shape, output
+```
+### RNN 
+RNNs are a family of neural networks specifically designed to handle sequential data. They first proposed by y Rumelhart et al. (1986). Some specific characteristis of RNN that gives them the capability to process and make prediction on sequencial data are parameter sharing and recurrence. PArameter sharing is when we use the same set of parameters for different parts of the model. RNN blocks can be used for both encoder and decoder, which makes them capable to handle different compunation of input and output: such as many-to-one, and many-to-many. RNN employs backpropogation through time, meaning gradients backpropogates within a single unit, but through time. 
+
+Stacked RNN: RNN are uni-directional and stacked on top of each other (the outputs of each timestep becomes input to the RNN in the next layer)
+
+Bidirectional RNN: uses one set of input-to-hidden and hidden-to-hidden weights to process the inputs from start to end and another set to process the inputs in reverse (end to start) and concatenate the hidden states from both directions. It is on this concatenated hidden state that we apply the output equation.
+
+RNN in putorch has the following parameters:
+- `input_size`: The number of expected features in the input. For univariate time series this is 1.
+- `hidden_size`: Dimension of hiddem state: (D*number of layers, batch size, hidden size), where D = 1 for bidirectional=False and D = 2 for bidirectional=True.
+- `num_layers`: Number of TNNs that will be stacked on top of each other (default: 1)
+- `nonlinearity`: such as ReLU and tanh
+- `bias`: Bolean indicates whether or not add bias to the update equations (Default: True)
+- `batch_first`: define order of input dimension to be one of the following (Default: False): (batch size, sequence length, number of features) or (sequence length, batch size, number of features).
+- `dropout`: probability uses in a dropout layer on the outputs of each RNN layer except the last (default: 0)
+- `bidirectional`: (Default: False)
+
+There are two outputs of the RNN cell: an output and a hidden state. The output can be either (batch size, sequence length, D*hidden size) or (sequence length, batch size, D*hidden size), depending on batch_first. The hidden state has the dimension of (D*number of layers, batch size, hidden size).  
+
+__Downside if RNN__ is vanishing or exploding gradient. This is when the gradient, as it is backpropagated through the network, either shrinks to zero or explodes to a very high number. The former makes the network stop learning, while the latter makes the learning unstable.
+
+
+### LSTM model
+LSTM adds memory cell to the RNN, which serves as long-term memory and is used in addition to the hidden state memory of classical RNNs. In an LSTM, multiple gates are tasked with reading, adding, and forgetting information from these memory cells. This memory cell acts as a gradient highway, allowing the gateways to pass relatively unhindered through the network. This is the key innovation that avoided vanishing gradients in RNNs ([ref](https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html#torch.nn.LSTM)).
+- Input gate: The function of this gate is to decide how much information to read from the current input and previous hidden state.
+- Forget gate: The forget gate decides how much information to forget from long-term memory
+- Output gate: The output gate decides how much of the current cell state should be used to create the current hidden state, which is the output of the cell.
+
+
+__Building a LSTM model__
+- for hidden state, LSTM expect a tuple of tensors of the same dimension: (hidden state, cell state).
+- LSTMs, just like RNNs, have stacked and bidirectional variants, and PyTorch handles them in the same way.
+
+### Gated recurrent unit
+
+ 
+<code style="color : orangered"> comple this section</code>
+GRU is another variant of the RNN that has a much simpler structure than an LSTM (Cho et al 2014). 
+
+### Convolution networks
+- -
+- -
+- -
+- -
+- -
+
+
+## Deep learning for time series: tabular regression
+
+
+## Deep learning for time series: single-step-ahead recurrent neural networks
+
+ 
+## Deep learning for time series: sequence-to-sequence models
+
+
+## Transformers for time series
+
+## Global models
+
+## Specialized deep learning architectures for time series forecasting
+Any learning algorithm for making prediction makes a set of assumptions, called learning bias. Every DL architecture has its own inductive biases, which is why some types of models perform better on some types of data. Designing the right kind of inductive biases makes or breaks the DL system. 
+
+### Neural Basis Expansion Analysis for Interpretable Time Series Forecasting (N-BEATS)
+NBeat is the first model that used some components from DL, and made a splash in the field by winning the M4 competition (univariate) in 2018.
+
+Unique aspects of N-BEATs architecture
+- formulating the problem as a multivariate regression problem (instead of encoder-decoder)
+- using residual principle, stach many basic block to build a deeper model (150 layers)
+- capable of generating human interpretable output
+
+__Forecasting with N-BEATs__
+
+_PyTorch Forecasting_ has `Nbeats` class ([ref](https://pytorch-forecasting.readthedocs.io/en/stable/api/pytorch_forecasting.models.nbeats.NBeats.html)), with the following parameters:
+- stack_types: This defines the number of stacks that we need to have in the N-BEATS model. This should be a list of strings (generic, trend, or seasonality) denoting the number and type of stacks. Examples include ["trend", "seasonality"], ["trend", "seasonality", "generic"], ["generic", "generic", "generic"], and so on. However, if the entire network is generic, we can just have a single generic stack with more blocks as well.
+- num_blocks: This is a list of integers signifying the number of blocks in each stack that we have defined. If we had defined stack_types as ["trend", "seasonality"], and we want three blocks each, we can set num_blocks to [3,3].
+- num_block_layers: This is a list of integers signifying the number of FC layers with ReLU activation in each block. The recommended value is 4 and the length of the list should be equal to the number of stacks we have defined.
+- width: This sets the width or the number of units in the FC layers in each block. This is also a list of integers with lengths equal to the number of stacks defined.
+- sharing: This is a list of Booleans signifying whether the weights generating the expansion coefficients are shared with other blocks in a stack. It is recommended to share the weights in the interpretable stacks and not share them in the generic stacks.
+expansion_coefficient_length: This represents the size of the expansion coefficients (). Depending on the kind of block, the intuitive meaning of this parameter changes. For the trend block, this means the number of polynomials we are using in our basis functions. And for the seasonality, this lets us control how quickly the underlying Fourier basis functions vary. The Fourier basis functions are sinusoidal basis functions with different frequencies; if they have a large expansion_coefficient_length, this means that subsequent basis functions will have a larger frequency than if you had a smaller expansion_coefficient_length. This is a parameter that we can tune as a hyperparameter. A typical range can be between 2 and 10.
+
+__Interpreting N-BEATs forecasting__
+
+Running under interpretable mode (`mode="prediction"` to `mode="raw"`), provides more interpretability by separating the forecast into trend and seasonality
+
+
+### Neural Basis Expansion Analysis for Interpretable Time Series Forecasting with Exogenous Variables (N-BEATSx)
+This is an extension for N-BEATS that accepts exogenous variables. The overall structure is the same (with blocks, stacks, and residual connections) as N-BEATS.
+
+__Forecasting with N-BEATSx__
+
+`neuralforecast` by Nixtla has an implementation for N-BEATSx. `neuralforecast` doesn’t support categorical features, and it requires encode the categorical features into numerical representations during the preprocessing stage. 
+
+### Neural Hierarchical Interpolation for Time Series Forecasting (N-HiTS)
+This model is specifically desinged for long-horizon forecating. Both Transformers based models and N-BEATS variants scale quadratically in memory and computation cost with regards to forecating horizon length. While sharing a large part of its architecture with N-BETS, (N-HiTS has stacks of blocks arranged in a residual manner), N-HiTS differs only in the kind of blocks it uses. All the blocks in N-HiTS are generic. N-HiTS tries to decompose the signal into multiple frequencies and forecast them separately. Key improvements of N-HiTS are:
+- Multi-rate data sampling: incorporating sub-sampling layers before the fully connected blocks so that the resolution of the input to each block is different. This is similar to smoothing the signal with different resolutions so that each block is looking at a pattern that occurs at different resolutions
+- Hierarchical interpolation: N-HiTS proposes a technique called temporal interpolation, to address issue arise form forecasting very long horizon. 
+- Synchronizing the rate of input sampling with a scale of output interpolation across the blocks
+
+__Forecasting with N-HiTS__
+
+- N-HiTS is implemented in PyTorch Forecasting, with the following parameters:
+- n_blocks: This is a list of integers signifying the number of blocks to be used in each stack. For instance, [1,1,1] means there will be three stacks with one block each.
+- n_layers: This is either a list of integers or a single integer signifying the number of FC layers with a ReLU activation in each block. The recommended value is 2.
+- hidden_size: This sets the width or the number of units in the FC layers in each block.
+- static_hidden_size: The static features are encoded using an FC encoder into a dimension that is set by this parameter. We covered this in detail in the Neural Basis Expansion Analysis for Interpretable Time Series Forecasting with Exogenous Variables (N-BEATSx) section.
+- shared_weights: This signifies whether the weights generating the expansion coefficients are shared with other blocks in a stack. It is recommended to share the weights in the interpretable stacks and not share them in the generic stacks.
+- pooling_sizes: This is a list of integers that defines the pooling size () for each stack. This is an optional parameter, and if provided, we can have more control over how the pooling happens in the different stacks. Using an ordering of higher to lower improves results.
+- pooling_mode: This defines the kind of pooling to be used. It should be either 'max' or 'average'.
+- downsample_frequencies: This is a list of integers that defines the expressiveness ratios () for each stack. This is an optional parameter, and if provided, we can have more control over how the interpolation happens in the different stacks.
+
+
+### Informer
+The Informer model is a modification of Transformers, with the following major changes:
+- Uniform Input Representation: a methodical way to capture history of a series along with other informations
+- ProbSparse: based on information theory, it is used to improve model efficiency
+- attention distillation: reduces computational complexity
+- generative-style decoding: it generates a long-term horizon in a single forward pass (instead of employing dynamic recurrence)
+
+__Note__ Informer model does not support exogenous variables. The only ifnormation it supports is global timestamp information and holiday information. 
+
+Major parameters of Informer:
+- label_len: This is an integer representing the number of timesteps from the input sequence to sample as a START token while decoding.
+- distil: This is a Boolean flag for turning the attention distillation off and on.
+- e_layers: This is an integer representing the number of encoder layers.
+- d_layers: This is an integer representing the number of decoder layers.
+- n_heads: This is an integer representing the number of attention heads.
+- d_ff: This is an integer representing the number of kernels in the one-dimensional convolutional layers used in the encoder and decoder layers.
+- activation: This is a string that takes in one of two values – relu or gelu. This is the activation to be used in the encoder and decoder layers.
+- factor: This is a float value that controls the sparsity of the attention calculation. For a value less than 1, it reduces the number of query-value pairs to calculate the divergence measure and reduces the number of Top-u samples taken than the standard formula for these quantities.
+- dropout: This is a float between 0 and 1, which determines the strength of the dropout in the network.
+
+
+
+### Autoformer
+Autoformer is another variant of Transformers based time series model designed for handling long-term horizon forecasting. The focus of Informer is on improve computation efficiency. Autoformer focus is modifyied attention and couples it with aspects if the time series decomposition. One difference from Informer is using AutoCorrelation mechanism instead of ProbSparse attention that Informer uses. Also instead of attention distillation, Autoformer employs an encoder-decoder inspired by time seris decompostion.
+
+__Note__ Autoformer model does not support exogenous variables. The only ifnormation it supports is global timestamp information and holiday information. 
+
+Major parameters of Autoformer:
+
+### Temporal Fusion Transformer (TFT)
+TFT is a high-performing, interpretable, and global DL model is thoughtfully designed from the ground up to make the most efficient use of all the different kinds of information.
+
+__Forecasting with TFT__: PyTorch Forecasting has an implementation of TFT.  The `TemporalFusionTransformer` class in PyTorch Forecasting has the following major parameters:
+
+### Interpretability
+
+
+### Probabilistic forecasting
+
+
+
+
+
+
+
+
+
+
 
 
 
