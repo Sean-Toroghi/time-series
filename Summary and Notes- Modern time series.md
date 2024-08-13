@@ -141,11 +141,7 @@ Given a time series of length $L$ at time $t$, in an ideal world, each observati
 
 Employ this approach means we rely on the cocnept of time fore temporal embedding models and assume that any values in the time sereies is only dependent on time. This leads to possiblity of creating new feature (feature engineering) that capiute not only time, but also the passage of time, prediodicity of time and so on. 
 
-
-## Feature engineering
-FEature engineering is the process of engineering features from the data to make the learning process more efficient while improving its performance. This is not required for classical method such as ARIMA, since it is build into the model. One the other hand, machine learning methods benefits from feature engoneering, since they do not explicitly understand time. In such a case, feature engieering embed the temporal aspect of time series into the dataset. Two approached for encode time into a machine learning model are _time delay embeding_ and _temporal embedding_.
-
-__Data leakage__
+## Data leakage
 
 During the feature engineering, one important consideration is data leakage, either in the form of target leakage or train-test contamination. Data leakage, if occurs, leads to poor model performance when is used to make prediction on unseen data. 
 - target leakage occurs when the information about the target leakks into some of the feature in the model. During training, the model then relies heavility on those features, leading to poor generalization.
@@ -157,21 +153,43 @@ __Identify data leakage__
 - if the weigh of one or some features after training be too large compare to the other weights in the trained model, ther is a high chance of data leakage
 
 ## Forecast horizon
- Forecast horizon is the number of time steps into the future we want to forecast at any point in time. 
+ Forecast horizon is the number of time steps into the future we want to forecast at any point in time. When picking  the horizon, one consideration is to make sure it does not lead to data leakage. 
+
+## Feature engineering
+FEature engineering is the process of engineering features from the data to make the learning process more efficient while improving its performance. This is not required for classical method such as ARIMA, since it is build into the model. One the other hand, machine learning methods benefits from feature engoneering, since they do not explicitly understand time. In such a case, feature engieering embed the temporal aspect of time series into the dataset. Two approached for encode time into a machine learning model are _time delay embeding_ and _temporal embedding_.
 
 
 
+__Time delay embedding__
+
+- __Lags (or backshift)__
+  To create encode time series with time-delay embedding, we can create multiple lags as timesteps before the current time. This method connects the present value to a single point in the past. This could be done in python by the following function: `df['lag_a'] = df['target'].shift(a)` in which $a$ represent the number of backshift for creating a lag. Then the differnet lag values are concatenated to generate a history for a value point in the time series. 
+  
+  <img src="https://github.com/user-attachments/assets/bfd6036e-57e4-4aff-8ef6-142a891d6072" width="420" height="300"> [ref](https://learning.oreilly.com/api/v2/epubs/urn:orm:book:9781803246802/files/image/B17959_05_06.jpg)
+
+
+- __Rolling window aggregation__
+
+  This method connects the current value to an aggregate statistic of a window in the past. Different statistics such as such as the mean, standard deviation, min, and max could be used for each rolling window. One consideration is that the rolling window should not include the current value to avoid data leakage.
+  
+  
+  <img src="https://github.com/user-attachments/assets/e7341547-1865-4e60-808d-5b79b9d72e78" width="420" height="300">  [ref](https://learning.oreilly.com/api/v2/epubs/urn:orm:book:9781803246802/files/image/B17959_06_03.jpg)
 
 
 
+- __Seasonal rolling window aggregation__
+
+  Another temporal embedding method is seasonal rolling window aggregation that takes $n$ consecutive obserations in the past, and skipping a constant number of timesteps between each item in a window. This method requires parameter $m$ (seanonality period), which represents the number of timesteps after which we expect the seasonality pattern to repeat. One consideration is that the rolling window should not include the current value to avoid data leakage.
+
+![B17959_06_04](https://github.com/user-attachments/assets/7af23826-4939-4e40-9d75-4b9bf512c178)
 
 
 
+- __Exponentially weighted moving averages (EWMA)__
 
 
 
-
-
+__Temporal embedding__
 
 
 
