@@ -180,8 +180,8 @@ __Time delay embedding__
 - __Seasonal rolling window aggregation__
 
   Another temporal embedding method is seasonal rolling window aggregation that takes $n$ consecutive obserations in the past, and skipping a constant number of timesteps between each item in a window. This method requires parameter $m$ (seanonality period), which represents the number of timesteps after which we expect the seasonality pattern to repeat. One consideration is that the rolling window should not include the current value to avoid data leakage.
-
-![B17959_06_04](https://github.com/user-attachments/assets/7af23826-4939-4e40-9d75-4b9bf512c178)
+  
+  <img src="https://github.com/user-attachments/assets/7af23826-4939-4e40-9d75-4b9bf512c178" width="420" height="300">[ref](https://learning.oreilly.com/api/v2/epubs/urn:orm:book:9781803246802/files/image/B17959_06_04.jpg)
 
 
 
