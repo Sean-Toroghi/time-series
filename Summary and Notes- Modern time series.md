@@ -126,14 +126,101 @@ Some visualization techniques for a time series data are:
 
 
 
-
+---
 ---
 # Machine learning approach
+Conventional machine learning paradime developes a model by giving a learnable function input and desired output (true values) and through training process fit the funtion to the given data. However, this is not the case for time forecasting task where the input variables are the history and output occurs in the feature. This is an extrapolation problem, where as machine learning method such as regression is interpolation one. Employ data-driven approach it is much harder to perform extrapolation. Another issue with machine learning methods for solving a time series forecasting task is the assumption of i.i.d., where time series breaks this assumption. As the result, prior to employ machine learning method, the time series data needs to be casted as appropriate format that holds the i.i.d. assumption.
 
-## Regression
+## Process time series dataset for machine learning methods
+
+__Concept of lag and time-delay embedding__
+
+Given a time series of length $L$ at time $t$, in an ideal world, each observation should be conditioned on all of the values in its past. However, it is not practical and the forecasting function is restricted to a limited lag value $m$ where $m<L$. For example, $m$ in Markov models (also claled finite memory models) is called the order pof autoregression, memory size, or the receptive field. This concept is used to prepare time series dataset for a machine learning model. An arbitrary window of size $m$ extracts fixed lenght subsequence of timeseries and by sliding this window over the lenght of the time series we end up with the dataset. This method of encoding a time series to dataset for machine learning models is called __time-delay embedding__. Follwoing illustration shows a sliding window with memory size of 3. 
+
+<img src="https://learning.oreilly.com/api/v2/epubs/urn:orm:book:9781803246802/files/image/B17959_05_06.jpg" width="480" height="200"> [ref](https://learning.oreilly.com/api/v2/epubs/urn:orm:book:9781803246802/files/image/B17959_05_06.jpg)
+
+Employ this approach means we rely on the cocnept of time fore temporal embedding models and assume that any values in the time sereies is only dependent on time. This leads to possiblity of creating new feature (feature engineering) that capiute not only time, but also the passage of time, prediodicity of time and so on. 
+
+
+## Feature engineering
+FEature engineering is the process of engineering features from the data to make the learning process more efficient while improving its performance. This is not required for classical method such as ARIMA, since it is build into the model. One the other hand, machine learning methods benefits from feature engoneering, since they do not explicitly understand time. In such a case, feature engieering embed the temporal aspect of time series into the dataset. Two approached for encode time into a machine learning model are _time delay embeding_ and _temporal embedding_.
+
+__Data leakage__
+
+During the feature engineering, one important consideration is data leakage, either in the form of target leakage or train-test contamination. Data leakage, if occurs, leads to poor model performance when is used to make prediction on unseen data. 
+- target leakage occurs when the information about the target leakks into some of the feature in the model. During training, the model then relies heavility on those features, leading to poor generalization.
+- train-test contamination occurs when there is some information leaking between the train and test sets. Such a case could occur in different stages of preprocessing, such as during spliting the trian and test set, or scalling the dataset before spliting the train and test sets. 
+
+__Identify data leakage__
+- if a model preform too good to be true, it is probably because of a data leakage
+- checking correlation between target and features could reveal potential data leakage
+- if the weigh of one or some features after training be too large compare to the other weights in the trained model, ther is a high chance of data leakage
+
+## Forecast horizon
+ Forecast horizon is the number of time steps into the future we want to forecast at any point in time. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ---
-# Target trabsformation
+# Target transformation
 
 ## Trend and deterending
 
