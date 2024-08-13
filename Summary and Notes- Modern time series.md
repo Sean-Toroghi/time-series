@@ -187,69 +187,60 @@ __Time delay embedding__
 
 - __Exponentially weighted moving averages (EWMA)__
 
+  Similar to moving average, but this method cpmputes weighted average of values in the window. Weight is computed by applying a decay at an exponentil rate: `df["ewma"]=df['column'].shift(1).ewm(alpha=0.5).mean()`
+  
+  <img src="https://github.com/user-attachments/assets/b8f972ac-7330-40b0-a76f-cf8180233ac8" width="420" height="300">[ref](https://learning.oreilly.com/api/v2/epubs/urn:orm:book:9781803246802/files/image/B17959_06_06.jpg)
 
 
 __Temporal embedding__
 
+With temporal embedding, time by itself is embeded into features that a machine learning model then could use as an input feature. Some of the temporal embedding methods are as follow:
+- __calendar feature__: consists of features that are extracted based on calendar, such as the month, quarter, day of the year, hour, minutes, and week of year. These features capture the periodicity of time and help the ML model capture seasonality well.
+- __time elapsed__: captures the passage of time in an ML model. This feature increases monotonically as time increases, giving the ML model a sense of the passage of time. An easy and efficient way to implement this is using integer representation of dates in Numpy: `df['time_elapsed'] = df['timestamp'].values.astype(np.int64)/(10**9)`
+- __Fourier terms__: is another way to represent the temporal information, but on a continuous scale. 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## Resources for feature engineering
+ 
+- [tsfeatures library](https://github.com/Nixtla/tsfeatures)
+- [paper: Ben D. Fulcher 2017, Feature-based time-series analysis](https://arxiv.org/abs/1709.08055)
+- [tsfresh library](https://tsfresh.readthedocs.io/en/latest/)
 
 
 ---
 # Target transformation
 
-## Trend and deterending
+In machine learning field, concept drift is an euqivalent of non-statinary phenomenon in time series. Stationary assimption for forecasting can be divided into two flavor: strict stationary assumption, which states the all the statistical priperties such as mean, std, and skewness do not change over time. Wek stationary states that mean and variance of the time series do not change with time. 
+Some of the components in the target of forecasting that could negatively effect forecast and are needed to be removed are: unit-root, trend, seasonality, and heteroscedasticity
+## unit-root
+To detect unit-root in a time seiries, we can employ Augmented Dickey-Fuller (ADF) test. The null hypotheis of this test states the autoregressive model of order 1 of the time series is equl to 1, and as the result the time series is not stationary (its variance changes over time). Alternative hypothesis states that the auto-regressive model if order 1 of the time series is less than 1 (it is stationary). The output of this test gives us a p-value that we can based on the cofidence level reject/fail-to-reject the null hyp. 
+
+## Remove unit-root
+To remove unit-root from time series one approach is __differencing transform__, in which we compute the difference between each value in time series and its predecessor value. Another approach for differncing transofrm is computing the ratio instead of subtraction.
+
+One downside of this _differnecing transform_ is it removes scale of time series. Another drawback is during the prediction, perform an inverse operation to get the actual values for prediction. 
+
+## Trend
+Trend in time series comes in two forms: deterministic and stochastic. In deterministic form, trend is constant and we can model it. Stochastic trend inherently depends on the previous value of the time series . 
+
+__Autoregressive model test__ : the same autoregressive model test for detecting unit-root also can be used to detect of a trend is deterministic or stochastic.
+
+__Kendall’s Tau__ is another test for detecting trend is Kendall’s Tau, which measures the correlation but carried out on the ranks of the data. It is non-parameteric test (similar to Spearman's corrrelation) that calculates a rank correlation between two variables. The result of the test provides p-value. If p-value < confidence we can conclude the  trend is statistically significant. Sign of the $\tau$ determines if the trend is increasing or decreasing. This method also checks whether the trend that has been identified is deterministic or stochastic and calculates the direction of the trend.
+
+__Mann-Kendall test (M-K test)__ is used to check for the presence of a monotonic upward or downward trend. It is a non-parametric test, but has two assumptions: 1. there is no auto-correlation in the time seris, and 2. there is no seasonality in the time series. __To remove autocorrelation__ we can employ __pre-whiteninig__, and then perform this test. A variant of this test is implemented in `pymannkendall` that can handle a seasonal time series.
+
+## Remove trend 
+In the case of deterministic trend, removing it improves model perforamcne. One approach is to preform regression on the ordinal representation of time, and extract the parameters. Then using the dates, extrapolate trend in the future. 
 
 ## Seasonality
-### Detect seasonality
+There are two popular ways to check for seasonality, apart from just eyeballing it: autocorrelation and fast Fourier transform. 
 
-There are two popular ways to check for seasonality, apart from just eyeballing it: autocorrelation and fast Fourier transform. Some of the strategies are:
-- best fit: chooses the best forecast accorsiding to the metric used for computing the error. 
+## Remove seasonality
 
+## heteroscedasticity
+A time series is heteroscedastic when the variability or dispersion of the time series varies with time
 
-
+## Remove heteroscedasticity
 ---
 
 # Ensemble and stacking 
