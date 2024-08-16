@@ -4,8 +4,8 @@ __Table of contents__
 - [FeatureConfig](#FeatureConfig) -  [Link](https://github.com/Sean-Toroghi/time-series/blob/main/codes/FeatureConfig.py)
 
 
-
-<a name= 'FeatureConfig'> # FeatureConfig</a>
+---
+# <a name= 'FeatureConfig'>FeatureConfig</a>
 
 [Link](https://github.com/Sean-Toroghi/time-series/blob/main/codes/FeatureConfig.py)
 
@@ -30,7 +30,11 @@ __Inputs:__
 - index_cols: A list of columns that are set as a DataFrame index while preprocessing. Typically, we would give the datetime and, in some cases, the unique ID of a time series as indices.
 - exogenous_features: A list of exogenous features. The features in the DataFrame may be from the feature engineering process, such as the lags or rolling features, but also external sources such as the temperature data in our dataset. This is an optional field that lets us bifurcate the exogenous features from the rest of the features. The items in this list should be a subset of continuous_features, categorical_features, or boolean_features.
 
-<a name= ''> # </a>
+---
+
+# <a name= ''></a>
 
 
-<a name= ''> # </a>
+---
+
+# <a name= ''> # </a>
