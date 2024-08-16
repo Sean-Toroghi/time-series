@@ -2,7 +2,7 @@
 
 __Table of contents__
 - [FeatureConfig](#FeatureConfig) -  [Link](https://github.com/Sean-Toroghi/time-series/blob/main/codes/FeatureConfig.py)
-
+- [ModelConfig](#ModelConfig) -  [Link](
 
 ---
 # <a name= 'FeatureConfig'>FeatureConfig</a>
