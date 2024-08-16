@@ -1,13 +1,13 @@
 <h1>Time series forecasting: Code depository</h1>
 
 __Table of contents__
-- [FeatureConfig](#FeatureConfig) [Link]()
+- [FeatureConfig](#FeatureConfig) -  [Link](https://github.com/Sean-Toroghi/time-series/blob/main/codes/FeatureConfig.py)
 
 
 
 <a name= 'FeatureConfig'> # FeatureConfig</a>
 
-[Link]()
+[Link](https://github.com/Sean-Toroghi/time-series/blob/main/codes/FeatureConfig.py)
 
 __Description__ A Python dataclass for preocessing data for a machine learning model. It has a method `get_X_y` that returns tuple of (features, target, original_target).
 
