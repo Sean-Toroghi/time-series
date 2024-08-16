@@ -156,7 +156,7 @@ __Identify data leakage__
  Forecast horizon is the number of time steps into the future we want to forecast at any point in time. When picking  the horizon, one consideration is to make sure it does not lead to data leakage. 
 
 ## Feature engineering
-FEature engineering is the process of engineering features from the data to make the learning process more efficient while improving its performance. This is not required for classical methods such as ARIMA, since it is built into the model. On the other hand, machine learning methods benefit from feature engineering, since they do not explicitly understand time. In such a case, feature engineering embed the temporal aspect of time series into the dataset. Two approaches for encode time into a machine learning model are _time delay embeding_ and _temporal embedding_.
+Feature engineering is the process of engineering features from the data to make the learning process more efficient while improving its performance. This is not required for classical methods such as ARIMA, since it is built into the model. On the other hand, machine learning methods benefit from feature engineering, since they do not explicitly understand time. In such a case, feature engineering embed the temporal aspect of time series into the dataset. Two approaches for encode time into a machine learning model are _time delay embeding_ and _temporal embedding_.
 
 
 
@@ -205,6 +205,133 @@ With temporal embedding, time by itself is embedded into features that a machine
 - [tsfeatures library](https://github.com/Nixtla/tsfeatures)
 - [paper: Ben D. Fulcher 2017, Feature-based time-series analysis](https://arxiv.org/abs/1709.08055)
 - [tsfresh library](https://tsfresh.readthedocs.io/en/latest/)
+
+---
+---
+## Machine learning method for time series forecasting
+Machine learning model tries to learn function $h$ (an approximation of an ideal function) that maps inputs to outputs: $'hat{y}=h(X,\phi)$, where $\phi$ is the model parameters. We pick $h$ from a family of functions (also called models) that performs the best out among all models. To make this process standard, the same configuration and preprocessing need to be conducted for all models, as well as evaluation approach.
+
+### Linear regression
+This is one of the the basic forecating approach for machine learning model, in which the goal is to minimize the loss. The most popular method of estimation is using ordinary least square, in which the model tries to minimize the residual sum of squares (mean square error). Assumptions in regression model are:
+- The relationship between the independent and dependent variables is linear.
+- The errors are normally distributed.
+- The variance of the errors is constant across all the values of the independent variable.
+- There is no autocorrelation in the errors.
+- There is little to no correlation between independent variables (multi-collinearity).
+
+In time series forecasting, all but the first assumption are ignore. It is also possible to fit a non-linear relation by projecting it into a  higher dimensional space, where the problem is linear. 
+
+Regression model may not perform well for time series forecastng due to possibility of multi-colinearity, where a small change of input could result in a large change in coefficiient value or its sign. 
+
+Plotting the coefficient of a linear regression model, after fitting the data, provides an insight to how well the model fits and possibility of overfitting (vergy large coefficient value could mean the model is overfitted or there is leakage in dataset).
+
+__To overcome overfitting issue__ we can employ regularized linear regression model: either LESSO regression or Ridge regression.
+- LESSO regression uses L1 norm to regularize a regression model.
+- Ridge regression uses L2 norm to regularize a regression model.
+
+__Regularization from geometric perspective__
+
+From geometric perspective, L1 and L2 are measure of distance, where L2 is Euckidian distancem and L1 is Manhattan distance. When employ a regularization, it forces the coefficient to stay within a defined distance (norm) from the origin. In geometric perspective, during the optimization process we minimize the loss function within geometric shape defiend by the norm. In the following illsutration the concentric circles in the diagram are the contours of the loss function, with the innermost being the lowest. As we move outward, the loss increases. Instead of selecting $\beta_{opt}$ the regularized regression pickes $\beta$ which is within geometric norm. Even with the same MAE, MSE, and so on, ridge or lasso regression is preferred to linear regression because of the additional stability and robustness that comes with regularized regression, especially for forecasting, where multi-collinearity is almost always there. 
+
+  <img src="https://github.com/user-attachments/assets/63fde1cc-ccf3-4ade-afdd-4630655dd3b9" width="420" height="300">[Ref.](https://learning.oreilly.com/api/v2/epubs/urn:orm:book:9781803246802/files/image/B17959_08_05.jpg)
+
+
+
+__L1 vs L2__: L1 norm (LASSO regression) produces a spase solution, while L2 pushes the coefficient of irrelevant features to zero (but not exactly zero). This is because the most optimal coefficients are at the edge of geometric shape of the employed regularization method. With L2, the circle does not have a corner and minima can lie anywhere on the edge of the most outer contour circle. The L1, on the hand, has a dimond shape with four corners, and the minima would lie on one of those corners. This makes the coefficient to be zero at optimal solution.
+
+__Downside of using regression__: regression models only capture linear reshionships and for dataset with non-linear relashipships this model cannot provide an accurate solution.
+
+### Decision trees
+Decision trees split the feature space into different sub-spaces and fit a very simple model (such as average) to each one. There are two types of nodes in a decision tree – a decision node and a leaf node. A decision node acts as if-else statement, and leaf nodes are nodes that don’t have any other branches below them. A popular loss fucntion for regressio trees is square loss. Over the years, several alogirthms are proposed for implementing a decision tree model, amongwhich are ID3, C4.5, and CART. Classification and Regression Trees (CART) is one of the most popular methods, which support regression as well. 
+
+To avoid overfitting, one approach is to cap the depth of the tree. Other hyperparameters for this purpose are minimum number of sampels required to split, and minimum decrease in cost ot carry out a split. [Ref](https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeRegressor.html)
+
+Feature importance method in sklearn can used to investigate contribution of features to final prediction. However, it can also create a misleading. Instead employ permutation importance (`sklearn.inspection.permutation_importance`) provides a better assesment for feature importance analysis. 
+
+
+### Random forest
+Random forest, as an ensemble learning method, employs several base learners and provides the output by combining hte output of each model. Random forest is an example of bagging approach as an ensemple learning method that aim to mitigate and control overfitting by bootstrap sampling (sampling releatedly with replacement from a population). It trains weak learners on each of the subset. The base learners have high-variance and low-bias, but with bagging we maintaince the same level of bias on each weak learner, while reducing the variance. One consideration is that if the weak learners correlate with each other, it diminishes the benefits of bagging.
+
+Random forest method is a modification of standard bagging approach that build a large collection of _decorrelated_ trees. Steps in random forest method are as follow:
+1. Draw a bootstrap sample from the training dataset.
+2. Select f features _at random_ from all the features.
+3. Pick the best split just using f features and split the node into two child nodes.
+4. Repeat steps 2 and 3 until we hit any of the defined stopping criteria.
+
+Just like the feature importance in decision trees, Random Forests also have a very similar mechanism for estimating the feature importance. 
+
+__Note__: For large datset, _XGBOOST_ implementation of random forest (`XGBRFRegressor`) performs much better than sklearn one. [Ref](https://xgboost.readthedocs.io/en/latest/tutorials/rf.html)
+
+### Ensemble tree methods: XGBoost and LightGBM
+
+Gradient boosting decision trees is another ensemble approach to use weak learners for creating a poweful model. In this approach, the weak learners are used in sequennce and each tries to improve the output of the previous one.
+
+Two interdependent hyper-parameters in this approach are learning rate and number of weak learners (trees). By picking a low rating rate with more trees, we can avoid overfitting while still gives the model enough complexity to fit non-linearity in a dataset. Early stopping is also used to avoid overfittung, in which a validation dataset is used to monitor the out-of-sample performance while training the model. Training stops adding more trees to the ensemble when the out-of-sample error stops reducing. Subsampling also is used (both on rows and columns), where row sub-sampling is similar to bootstrapping and column subsampling is similar to random feature selection in random forest. XGBoost and LightGBM also benefit from L1 and L2 regularizaiton in their objective function. Among differnt implementation of the boosting method, the following are more popular ones:
+- `GradientBoostingRegressor` and `HistGradientBoostingRegressor` in scikit-learn
+- XGBoost by T Chen
+- LightGBM from Microsoft
+- CatBoost from Yandex
+
+LigthGBM and CatBoost handle missing values natively, and support categorial features. The gradient boosting implementations have a mechanism for estimating the feature importance, which  is given by the average of split criteria reduction attributed to each feature in all the trees. There are several ways to get feature importance, and each implementation computes it differently. The most common ways of extracting are split and gain. Split computes feautres importance as the number of times a feature is used to split nodes in the trees. Gain is the total reduction in the split criterion. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ---
