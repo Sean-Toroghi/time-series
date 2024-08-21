@@ -554,11 +554,20 @@ __Forecasting with N-BEATSx__
 
 `neuralforecast` by Nixtla has an implementation for N-BEATSx. `neuralforecast` doesn’t support categorical features, and it requires encode the categorical features into numerical representations during the preprocessing stage. 
 
+
+
+
+
 ### Neural Hierarchical Interpolation for Time Series Forecasting (N-HiTS)
-This model is specifically designed for long-horizon forecasting. Both Transformers based models and N-BEATS variants scale quadratically in memory and computation cost with regards to forecasting horizon length. While sharing a large part of its architecture with N-BETS, (N-HiTS has stacks of blocks arranged in a residual manner), N-HiTS differs only in the kind of blocks it uses. All the blocks in N-HiTS are generic. N-HiTS tries to decompose the signal into multiple frequencies and forecast them separately. Key improvements of N-HiTS are:
+This model is specifically designed for long-horizon forecasting. Both Transformers based models and N-BEATS variants scale quadratically in memory and computation cost with regards to forecasting horizon length. While sharing a large part of its architecture with N-BETS, (N-HiTS has stacks of blocks arranged in a residual manner), N-HiTS differs only in the kind of blocks it uses. All the blocks in N-HiTS are generic. __N-HiTS tries to decompose the signal into multiple frequencies and forecast them separately__. Key improvements of N-HiTS are:
 - Multi-rate data sampling: incorporating sub-sampling layers before the fully connected blocks so that the resolution of the input to each block is different. This is similar to smoothing the signal with different resolutions so that each block is looking at a pattern that occurs at different resolutions
+
+  Similar to smoothing the signal with different resolution,
+  
 - Hierarchical interpolation: N-HiTS proposes a technique called temporal interpolation, to address issues that arise from forecasting a very long horizon. 
 - Synchronizing the rate of input sampling with a scale of output interpolation across the blocks
+
+
 
 __Forecasting with N-HiTS__
 
