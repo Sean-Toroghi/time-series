@@ -427,6 +427,30 @@ __Additional references__
 In the global forecasting paradigm, a single model predicts a range of time series together. 
 
 
+
+## Strategies to improve model performance
+
+### Partitioning
+This strategy involves partitioning or splitting the dataset into multiple equal parts. While the reason this method leads to improve model performance is not yet discovred some suggestions are: this method makes the job of the global model easier to learn when training, and this method increase model complexity [(Ref.)](https://arxiv.org/abs/2008.00444). There are several approaches to perform partitioning among which are the followings:
+
+- __Random partitioning__: This method randomly splits the dataset into $p$ equal partitions and train separate model for each model.
+- __Judgmental partitioning__: This method uses attributes of the time series to perform splitting. The use of feature depends on the model developer and features such as meta-feature or other characteristic of the time series such as volumen, variability, intermittency or a combination of features can be used to partition the dataset.
+- __Algorithmic parititioning__: This method employs clustering to partition the data. Two approaches for clustering a time series are:
+  - extracting features for each time series and use them to form clusters. Clustering techniques such as k-mean, k-medoids, or HDSCAN then can be applied to perform clustering.
+  - using  dynamix time wraping (DTW) distance or other time series specific clustering techniques. One library for clustering time series is `tslearn`.
+
+
+
+
+
+
+
+
+
+
+
+
+
 --- 
 # Deep learning for time series forecasting
 
