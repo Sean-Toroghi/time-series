@@ -2,10 +2,10 @@
 
 __Table of contents__
 - [FeatureConfig](#FeatureConfig) -  [Link](https://github.com/Sean-Toroghi/time-series/blob/main/codes/FeatureConfig.py)
-- [ModelConfig](#ModelConfig) -  [Link](
+- [ModelConfig](#ModelConfig) -  [Link]()
 
 ---
-# <a name= 'FeatureConfig'>FeatureConfig</a>
+## <a name= 'FeatureConfig'>FeatureConfig</a>
 
 [Link](https://github.com/Sean-Toroghi/time-series/blob/main/codes/FeatureConfig.py)
 
@@ -32,7 +32,7 @@ __Inputs:__
 
 ---
 
-# <a name= ''></a>
+## <a name= ''></a>
 
 
 ---
