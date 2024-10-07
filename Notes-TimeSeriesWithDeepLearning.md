@@ -24,18 +24,46 @@ CNN, LSTM, or other deep learning architecture require time series data to have 
 3. Features. One feature is one observation at a time step. One time step is comprised of one or more features.
 
 
-# LSTM - multivariate
+# LSTM - multivariate input, single step output
 
 A time series may have more than one observation for each time step. Multivariate time series comes in two flavor:
 1. multiple input series
 
    A numerical example of multiple input series is as follow, where the input shape for each sample is (3,2).
    ```
+   Original series:
+   [[ 10 15 25]
+    [ 20 25 45]
+    [ 30 35 65]
+    [ 40 45 85]]
+   
+   3D format:
     [[10 15]
      [20 25]
      [30 35]] 65
     [[20 25]
      [30 35]
      [40 45]] 85
+   ...
    ```
 3. multiple parallel series.
+
+   A numerical example of multiple parallel series, wher the input shape for each time series
+   ```
+   Original series
+   [[ 10 15 25]
+    [ 20 25 45]
+    [ 30 35 65]
+    [ 40 45 85]
+    [ 50 55 105]]
+
+   3D format:
+   [[10 15 25]
+    [20 25 45]
+    [30 35 65]] [40 45 85]
+   [[20 25 45]
+    [30 35 65]
+    [40 45 85]] [ 50 55 105]
+   ...
+   ```
+# LSTM - mutivariate input, multistep output
