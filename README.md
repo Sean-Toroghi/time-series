@@ -1,19 +1,22 @@
 # Time series
-Depository ofcode samples in the area of time series.
+Depository of code, projects, notes, and summary in the field of time series forecasting. 
 
 
-## Statistical methods
+# Table of contents 
+__Book summary and notes: []()__: [link]()
 
-## Deep learning
-- MLP
-- CNN
-- Transformers based
-- Methos enhancing deep learning models
-  - Fourier transform
-  - Loss function
+__Book summary and notes: []()__: [link]()
+
+__My notes and code samples__: 
+- [link]()
+- [link]()
+- [link]()
+- [link]()
+
+ 
 
 
-Reference
+# Reference
 - Deep learning for time series Forecasting Predict the Future with MLPs, CNNs and LSTMs in Python. By: Jason Brownlee. 2018
 - Introduction to time series forecasting with Python. How to develop models to predict the future. By: Jason Brownlee. 2020
 - Time series forecasting with Python. By: Marco Peixeiro. 2022
