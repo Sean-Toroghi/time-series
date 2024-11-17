@@ -68,14 +68,34 @@ __References__
 - []()
 - []()
 
-## Understanding the time series dataset
+---
 
-### `datetime` data type
+# Understanding the time series dataset
+
+## Different type of information in a time series dataset
+- __Time series identifiers__: unique identifiers for a particular time series. Itcould be ID, or any unique feature.
+- __Static features__: they do not varying over time.
+- __Time-varying features__: the information that varies with time. For each pint in time, there is a  different value for these.
+
+
+## Time series format
+Time series may come in different format, such as compact, expanded, and wide data formats.
+- Compact form data is when any particular time series occupies only a single row in the pandas DataFrame – that is, the time dimension is managed as an array within a DataFrame row.
+- The expanded form is when the time series is expanded along the rows of a DataFrame. If there are n steps in the time series, it occupies n rows in the DataFrame. The time series identifiers and the metadata get repeated along all the rows. The time-varying features also get expanded along the rows. And instead of the start date and frequency, we have the datetime as a column.
+- In the wide format, the date is represented as an index or as one of the columns and the different time series as different columns of the DataFrame.
+
+### Time series frequency
+- Finding global end: One of the most important characteristics of a time series is regular intervals, and we need to make sure to enforce regular intervals in the time series. __Best practice__ when working with multiple time series is to check the _end date_ of all the time series, and align them if they are not uniform, based on the latest date across all time series. 
+- 
+
+# Analyzing and visualizing time series data -EDA
+
+## `datetime` data type
 References: [Pandas datetime offset](https://pandas.pydata.org/docs/user_guide/timeseries.html#timeseries-offset-aliases)
 
 Perhaps the most important preliminary action for processing a time series in pandas dataframe format is to convert the date into pandas datetime format. After that, we will have access to a whole range of features, such as slicing, getting information about the date such as min or max, creating range, add or subtract days, weeks, or other time variables, and more. 
 
-### Missing values
+## Missing values
 References: [Pandas interpolation](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.interpolate.html) and [scipy interpolation](https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.interp1d.html#scipy.interpolate.interp1d)
 
 Handling missing data in time series requires knowledge about the data. For example, a missing order data in a time series from store orders may reflect store closure in a particular day, like Sunday. If we fill the gap with zero, model will have a false prediction for Monday's orders. On the other hand, if we give extra information to the model (such as the previous day was Sunday), the model will perform differently, and make a more accurate prediction. 
@@ -91,20 +111,7 @@ __Some imputation techniques__
   - `df[].interpolate(method="spline", order=2)`
   - `df[].interpolate(method="polynomial", order=5)`
 
-__Handling longer period of missing data__
 
-
-
-### Compact, expanded, and wide data formats
-- Compact form data is when any particular time series occupies only a single row in the pandas DataFrame – that is, the time dimension is managed as an array within a DataFrame row.
-- The expanded form is when the time series is expanded along the rows of a DataFrame. If there are n steps in the time series, it occupies n rows in the DataFrame. The time series identifiers and the metadata get repeated along all the rows. The time-varying features also get expanded along the rows. And instead of the start date and frequency, we have the datetime as a column.
-- In the wide format, the date is represented as an index or as one of the columns and the different time series as different columns of the DataFrame.
-
-### Time series frequency
-- Finding global end: One of the most important characteristics of a time series is regular intervals, and we need to make sure to enforce regular intervals in the time series. __Best practice__ when working with multiple time series is to check the _end date_ of all the time series, and align them if they are not uniform, based on the latest date across all time series. 
-- 
-
-# Analyzing and visualizing time series data -EDA
 ## Components of a time series
 A time series can contain some or all of the following components:
 - trend: a long-term change in the mean of a time series.
